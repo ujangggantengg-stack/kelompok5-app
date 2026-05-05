@@ -13,6 +13,58 @@ use Inertia\Inertia;
 
 /*
 |--------------------------------------------------------------------------
+| CUSTOMER AUTHENTICATION
+|--------------------------------------------------------------------------
+*/
+Route::get('/customer/login', [\App\Http\Controllers\Auth\CustomerAuthController::class, 'showLogin'])->name('customer.login');
+Route::post('/customer/login', [\App\Http\Controllers\Auth\CustomerAuthController::class, 'login'])->name('customer.login.post');
+Route::get('/customer/register', [\App\Http\Controllers\Auth\CustomerAuthController::class, 'showRegister'])->name('customer.register');
+Route::post('/customer/register', [\App\Http\Controllers\Auth\CustomerAuthController::class, 'register'])->name('customer.register.post');
+Route::post('/customer/logout', [\App\Http\Controllers\Auth\CustomerAuthController::class, 'logout'])->name('customer.logout');
+
+// Test CSRF
+Route::get('/test-csrf', function() {
+    return response()->json([
+        'csrf_token' => csrf_token(),
+        'session_id' => session()->getId(),
+        'session_driver' => config('session.driver'),
+        'session_path' => storage_path('framework/sessions'),
+        'session_exists' => file_exists(storage_path('framework/sessions')),
+        'session_writable' => is_writable(storage_path('framework/sessions')),
+    ]);
+});
+
+// Google OAuth
+Route::get('/auth/google', [\App\Http\Controllers\Auth\GoogleController::class, 'redirect'])->name('customer.google.redirect');
+Route::get('/auth/google/callback', [\App\Http\Controllers\Auth\GoogleController::class, 'callback'])->name('customer.google.callback');
+
+/*
+|--------------------------------------------------------------------------
+| CUSTOMER PROTECTED ROUTES
+|--------------------------------------------------------------------------
+*/
+Route::middleware('auth:customer')->prefix('customer')->name('customer.')->group(function () {
+    // Profile
+    Route::get('/profile', [\App\Http\Controllers\Customer\ProfileController::class, 'index'])->name('profile');
+    Route::put('/profile', [\App\Http\Controllers\Customer\ProfileController::class, 'update'])->name('profile.update');
+    Route::put('/profile/password', [\App\Http\Controllers\Customer\ProfileController::class, 'updatePassword'])->name('profile.password');
+    Route::post('/profile/avatar', [\App\Http\Controllers\Customer\ProfileController::class, 'uploadAvatar'])->name('profile.avatar');
+    
+    // Addresses
+    Route::get('/addresses', [\App\Http\Controllers\Customer\AddressController::class, 'index'])->name('addresses');
+    Route::post('/addresses', [\App\Http\Controllers\Customer\AddressController::class, 'store'])->name('addresses.store');
+    Route::put('/addresses/{id}', [\App\Http\Controllers\Customer\AddressController::class, 'update'])->name('addresses.update');
+    Route::post('/addresses/{id}/primary', [\App\Http\Controllers\Customer\AddressController::class, 'setPrimary'])->name('addresses.primary');
+    Route::delete('/addresses/{id}', [\App\Http\Controllers\Customer\AddressController::class, 'destroy'])->name('addresses.destroy');
+    
+    // Orders
+    Route::get('/orders', [\App\Http\Controllers\Customer\OrderController::class, 'index'])->name('orders');
+    Route::get('/orders/{id}', [\App\Http\Controllers\Customer\OrderController::class, 'show'])->name('orders.show');
+    Route::post('/orders/{id}/reorder', [\App\Http\Controllers\Customer\OrderController::class, 'reorder'])->name('orders.reorder');
+});
+
+/*
+|--------------------------------------------------------------------------
 | HALAMAN UTAMA (WEB ROTI - BLADE)
 |--------------------------------------------------------------------------
 */

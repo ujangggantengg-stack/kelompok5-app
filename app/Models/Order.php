@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Order extends Model
 {
     protected $fillable = [
+        'customer_id',
         'order_number',
         'order_type',
         'pickup_date',
@@ -73,5 +74,10 @@ class Order extends Model
     public function messageThread()
     {
         return $this->belongsTo(MessageThread::class);
+    }
+
+    public function customer()
+    {
+        return $this->belongsTo(Customer::class);
     }
 }

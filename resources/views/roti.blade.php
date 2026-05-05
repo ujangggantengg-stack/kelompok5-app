@@ -7,6 +7,7 @@
     <title>Dapoer Budess - Roti Rumahan </title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Lora:wght@500;600&family=Outfit:wght@400;500;600;700&family=Great+Vibes&display=swap" rel="stylesheet">
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link href="{{ asset('css/homepage-enhanced.css') }}" rel="stylesheet">
     <style>
         :root {
             --primary: #8B4513;
@@ -1736,21 +1737,24 @@
 
         .cta-button {
             width: 100%;
-            padding: 0.9rem;
+            padding: 0.65rem 1rem; /* Smaller padding */
+            height: 42px; /* Fixed smaller height */
             border: none;
-            border-radius: 12px;
+            border-radius: 10px; /* Slightly smaller radius */
             background: var(--primary);
             color: white;
             font-family: 'Outfit', sans-serif;
             font-weight: 600;
+            font-size: 0.875rem; /* Smaller font size */
             cursor: pointer;
             transition: all 0.3s ease;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 0.5rem;
+            gap: 0.4rem;
             position: relative;
             z-index: 3;
+            line-height: 1;
         }
 
         .cta-button:hover {
@@ -3115,6 +3119,64 @@
             .nav-menu a { color: var(--text); padding: 0.5rem 0.75rem; text-decoration: none; }
             .nav-menu.open { display: flex; }
 
+            /* Mobile Login/Register Buttons */
+            .header-actions {
+                gap: 0.5rem !important;
+            }
+            
+            .login-btn, .register-btn {
+                padding: 0.5rem !important;
+                min-width: 40px !important;
+                justify-content: center !important;
+            }
+            
+            /* Hide text on mobile, show only icons */
+            .login-btn .btn-text,
+            .register-btn .btn-text {
+                display: none !important;
+            }
+            
+            .login-btn span:first-child,
+            .register-btn span:first-child {
+                font-size: 1.3rem !important;
+                margin: 0 !important;
+            }
+            
+            /* User menu on mobile */
+            .user-menu .user-btn {
+                padding: 0.4rem 0.6rem !important;
+            }
+            
+            .user-menu .user-btn img {
+                width: 28px !important;
+                height: 28px !important;
+            }
+            
+            .user-menu .user-btn span:not(:first-child) {
+                display: none !important; /* Hide name on mobile */
+            }
+            
+            .user-dropdown {
+                right: -50px !important;
+                min-width: 180px !important;
+            }
+            
+            /* Cart and Message buttons */
+            .cart-btn, .message-btn {
+                padding: 0.5rem !important;
+                min-width: 40px !important;
+            }
+            
+            .cart-btn .btn-text,
+            .message-btn .btn-text {
+                display: none !important; /* Hide text, show only icons */
+            }
+            
+            .cart-btn .btn-icon,
+            .message-btn .btn-icon {
+                font-size: 1.3rem !important;
+            }
+
             .status-badge { padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
             .status-pending { background: #f5f5f5; color: #616161; }
             .status-pending_admin { background: #eeeeee; color: #424242; }
@@ -3148,7 +3210,11 @@
             .product-name { font-size: 1.1rem; }
             .product-description { font-size: 0.85rem; }
             .price-new { font-size: 1.1rem; }
-            .cta-button { padding: 0.8rem; font-size: 0.9rem; }
+            .cta-button { 
+                padding: 0.6rem 0.875rem; 
+                font-size: 0.85rem; 
+                height: 40px; /* Consistent smaller height on mobile */
+            }
         }
 
         /* ========== SECTION DIVIDER ========== */
@@ -3246,14 +3312,65 @@
 
         <div class="header-actions">
             <button class="cart-btn" onclick="toggleCart()">
-                🛒 Keranjang
+                <span class="btn-icon">🛒</span>
+                <span class="btn-text">Keranjang</span>
                 <span class="cart-count" id="cartCount">0</span>
             </button>
             <button class="message-btn" onclick="openMessageModal()" style="position: relative;">
-                💬 Pesan
-                <span class="cart-count" id="msgBadge" style="display: none;">!</span>
+                <span class="btn-icon">💬</span>
+                <span class="btn-text">Pesan</span>
+                <span class="cart-count" id="msgBadge" style="display: none; position: absolute; top: -8px; right: -8px; background: #ff4444; color: white; font-size: 0.7rem; font-weight: 700; min-width: 20px; height: 20px; border-radius: 10px; display: flex; align-items: center; justify-content: center; border: 2px solid white; box-shadow: 0 2px 8px rgba(255,68,68,0.4);">0</span>
                 <span id="msgPulse" style="display: none; position: absolute; top: -5px; right: -5px; width: 12px; height: 12px; background: #ff4444; border-radius: 50%; border: 2px solid #fff; box-shadow: 0 0 0 rgba(255, 68, 68, 0.4); animation: pulse-red 2s infinite;"></span>
             </button>
+            
+            @auth('customer')
+                <!-- User Menu (Logged In) -->
+                <div class="user-menu" style="position: relative;">
+                    <button class="user-btn" onclick="toggleUserMenu()" style="display: flex; align-items: center; gap: 0.5rem; background: transparent; border: none; color: var(--cream); cursor: pointer; padding: 0.5rem 0.75rem; border-radius: 8px; transition: all 0.3s ease;">
+                        <img src="{{ Auth::guard('customer')->user()->avatar_url }}" alt="{{ Auth::guard('customer')->user()->name }}" style="width: 32px; height: 32px; border-radius: 50%; border: 2px solid var(--accent);">
+                        <span style="font-family: 'Outfit', sans-serif; font-weight: 500;">{{ Auth::guard('customer')->user()->name }}</span>
+                        <span style="font-size: 0.8rem;">▼</span>
+                    </button>
+                    
+                    <div id="userDropdown" class="user-dropdown" style="display: none; position: absolute; top: 100%; right: 0; margin-top: 0.5rem; background: white; border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.15); min-width: 200px; z-index: 10002; overflow: hidden;">
+                        <div style="padding: 1rem; border-bottom: 1px solid #eee; background: linear-gradient(135deg, var(--primary), var(--secondary));">
+                            <p style="color: white; font-weight: 600; margin: 0;">{{ Auth::guard('customer')->user()->name }}</p>
+                            <p style="color: rgba(255,255,255,0.8); font-size: 0.85rem; margin: 0;">{{ Auth::guard('customer')->user()->email }}</p>
+                        </div>
+                        <a href="{{ route('customer.profile') }}" style="display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 1rem; color: var(--dark); text-decoration: none; transition: background 0.2s;">
+                            <span>👤</span>
+                            <span>Profile Saya</span>
+                        </a>
+                        <a href="{{ route('customer.orders') }}" style="display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 1rem; color: var(--dark); text-decoration: none; transition: background 0.2s;">
+                            <span>📦</span>
+                            <span>Pesanan Saya</span>
+                        </a>
+                        <a href="{{ route('customer.addresses') }}" style="display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 1rem; color: var(--dark); text-decoration: none; transition: background 0.2s;">
+                            <span>📍</span>
+                            <span>Alamat</span>
+                        </a>
+                        <div style="border-top: 1px solid #eee; margin-top: 0.5rem;"></div>
+                        <form method="POST" action="{{ route('customer.logout') }}" style="margin: 0;">
+                            @csrf
+                            <button type="submit" style="width: 100%; display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 1rem; color: #dc3545; background: none; border: none; cursor: pointer; text-align: left; font-family: inherit; font-size: inherit; transition: background 0.2s;">
+                                <span>🚪</span>
+                                <span>Logout</span>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            @else
+                <!-- Login/Register Buttons (Guest) -->
+                <a href="{{ route('customer.login') }}" class="login-btn" style="background: transparent; border: 2px solid var(--cream); color: var(--cream); padding: 0.5rem 1.25rem; border-radius: 8px; text-decoration: none; font-weight: 500; transition: all 0.3s ease; font-family: 'Outfit', sans-serif; display: inline-flex; align-items: center; gap: 0.5rem;" title="Masuk">
+                    <span style="font-size: 1.2rem;">🔐</span>
+                    <span class="btn-text">Masuk</span>
+                </a>
+                <a href="{{ route('customer.register') }}" class="register-btn" style="background: linear-gradient(135deg, var(--accent), var(--secondary)); color: white; padding: 0.5rem 1.25rem; border-radius: 8px; text-decoration: none; font-weight: 600; transition: all 0.3s ease; font-family: 'Outfit', sans-serif; box-shadow: 0 4px 12px rgba(244, 164, 96, 0.3); display: inline-flex; align-items: center; gap: 0.5rem;" title="Daftar">
+                    <span style="font-size: 1.2rem;">✨</span>
+                    <span class="btn-text">Daftar</span>
+                </a>
+            @endauth
+            
             @auth
              @endif
             <button class="menu-toggle" onclick="toggleMenu()">☰</button>
@@ -3430,9 +3547,12 @@
         <div class="promo-modal" onclick="event.stopPropagation()">
             <div class="promo-modal-close" onclick="closePromoModal(event)">✕</div>
             <h2 class="promo-modal-title">🔥 Pilih Roti Promo Hari Ini</h2>
-            <div style="text-align: center; margin-bottom: 25px; margin-top: -20px;">
+            <div style="text-align: center; margin-bottom: 25px; margin-top: -20px; display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
                 <button onclick="toggleCart()" style="background: #fffcf0; border: 1px solid #D4AF37; padding: 8px 15px; border-radius: 20px; color: #4a2c0a; font-weight: 600; cursor: pointer; font-size: 0.9rem; display: inline-flex; align-items: center; gap: 8px; transition: all 0.3s;">
                     🛒 Lihat Keranjang (<span id="promoModalCartCount">0</span>)
+                </button>
+                <button onclick="closePromoModal(event)" style="background: #4a2c0a; border: 1px solid #D4AF37; padding: 8px 15px; border-radius: 20px; color: #fffcf0; font-weight: 600; cursor: pointer; font-size: 0.9rem; display: inline-flex; align-items: center; gap: 8px; transition: all 0.3s;">
+                    ✓ Selesai Belanja
                 </button>
             </div>
             
@@ -3464,7 +3584,7 @@
                             @if($p->bottom_label)
                                 <p class="promo-label-bottom">{{ $p->bottom_label }}</p>
                             @endif
-                            <button class="promo-buy-btn" onclick="directBuyPromo('{{ $p->name }}', {{ (int)$p->price_promo }})">🛒 Beli</button>
+                            <button class="promo-buy-btn" onclick="directBuyPromo('{{ $p->name }}', {{ (int)$p->price_promo }})">🛒 Tambah</button>
                         </div>
                     </div>
                     @endforeach
@@ -3586,107 +3706,166 @@
 
         <!-- Checkout Section -->
         <section id="checkout" class="section">
-            <h2 class="section-title">Checkout</h2>
-            <div class="checkout-form">
-                <h3 style="margin-bottom: 1.5rem; font-family: 'Playfair Display', serif;">Informasi Pengiriman</h3>
+            <div style="max-width: 600px; margin: 0 auto; padding: 1rem;">
+                <h2 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 1.5rem; color: #333;">Checkout</h2>
+                
                 <form id="checkoutForm" onsubmit="handleCheckoutSubmit(event)">
                     @csrf
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label>Nama Lengkap *</label>
-                            <input type="text" name="customer_name" required placeholder="Masukkan nama lengkap">
-                        </div>
-                        <div class="form-group">
-                            <label>Nomor Telepon (WA) *</label>
-                            <input type="tel" name="customer_phone" required placeholder="08xx xxxx xxxx">
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label style="margin-bottom: 1rem; display: block;">Metode Pengambilan *</label>
-                        <div style="display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 1.5rem;">
-                            <label style="flex: 1; padding: 1rem; border: 2px solid var(--primary); border-radius: 8px; cursor: pointer; transition: all 0.3s; background: #fffcf5;" id="shipping-delivery">
-                                <input type="radio" name="shipping_method" value="delivery" checked onclick="toggleAddressFields('delivery')">
-                                <span style="font-weight: 600; display: block; margin-bottom: 0.25rem;">🚚 Dianter Penjual</span>
-                                <span style="font-size: 0.85rem; color: #666;">Kami antar pesanan ke lokasi Anda</span>
-                            </label>
-                            <label style="flex: 1; padding: 1rem; border: 2px solid #ddd; border-radius: 8px; cursor: pointer; transition: all 0.3s;" id="shipping-pickup">
-                                <input type="radio" name="shipping_method" value="pickup" onclick="toggleAddressFields('pickup')">
-                                <span style="font-weight: 600; display: block; margin-bottom: 0.25rem;">🏠 Mengambil Langsung ke Toko</span>
-                                <span style="font-size: 0.85rem; color: #666;">Ambil pesanan Anda di gerai kami</span>
-                            </label>
-                        </div>
-                    </div>
                     
-                    <div id="addressSection">
-                        <div class="form-group">
-                            <label>Kota *</label>
-                            <input type="text" name="city" required placeholder="Contoh: Kota Bogor">
+                    <!-- Contact Info Card -->
+                    <div style="background: white; border-radius: 12px; padding: 1.25rem; margin-bottom: 1rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+                        <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem;">
+                            <div style="width: 40px; height: 40px; background: #f0f0f0; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.25rem;">👤</div>
+                            <h3 style="font-size: 1rem; font-weight: 600; color: #333; margin: 0;">Informasi Kontak</h3>
                         </div>
-                        <div class="form-group">
-                            <label>Nama Jalan *</label>
-                            <input type="text" name="street" required placeholder="Contoh: Jl. Mawar Indah">
+                        <div style="margin-bottom: 1rem;">
+                            <input type="text" name="customer_name" required placeholder="Nama Lengkap" style="width: 100%; padding: 0.875rem; border: 1px solid #e0e0e0; border-radius: 8px; font-size: 0.95rem; transition: border 0.2s;" onfocus="this.style.borderColor='#ee4d2d'" onblur="this.style.borderColor='#e0e0e0'">
                         </div>
-                        <div class="form-group">
-                            <label>Detail Rumah / Patokan (Opsional)</label>
-                            <input type="text" name="house_details" placeholder="Contoh: Rumah pagar hitam, ada pohon mangga">
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label>Nomor Rumah *</label>
-                                <input type="text" name="house_number" required placeholder="No. 12A">
-                            </div>
-                            <div class="form-group">
-                                <label>RT / RW *</label>
-                                <input type="text" name="rt_rw" required placeholder="005/002">
-                            </div>
-                        </div>
-                        <div style="background: #fff8e1; border-left: 4px solid #ffca28; padding: 1rem; margin-bottom: 1.5rem; border-radius: 4px;" id="shippingInfoBox">
-                            <p style="margin: 0; font-size: 0.9rem; color: #856404; font-weight: 600;">🚚 Informasi Pengiriman:</p>
-                            <p style="margin: 0.25rem 0 0; font-size: 0.85rem; color: #856404;">Ongkos kirim akan ditentukan oleh Admin setelah pesanan masuk. Kami akan menghubungi Anda melalui chat/WA.</p>
+                        <div>
+                            <input type="tel" name="customer_phone" required placeholder="Nomor WhatsApp (08xxx)" style="width: 100%; padding: 0.875rem; border: 1px solid #e0e0e0; border-radius: 8px; font-size: 0.95rem; transition: border 0.2s;" onfocus="this.style.borderColor='#ee4d2d'" onblur="this.style.borderColor='#e0e0e0'">
                         </div>
                     </div>
 
-                    <div id="pickupSection" style="display: none;">
-                        <div style="background: #e8f5e9; border-left: 4px solid #4caf50; padding: 1.5rem; margin-bottom: 1.5rem; border-radius: 8px;">
-                            <p style="margin: 0 0 1rem 0; font-size: 1rem; color: #2e7d32; font-weight: 700;">📍 Lokasi Pengambilan</p>
-                            <div style="background: white; padding: 1rem; border-radius: 6px; margin-bottom: 1rem;">
-                                <p style="margin: 0.5rem 0; color: #333; font-size: 0.95rem;"><strong>Dapoer Budess Bakery</strong></p>
-                                <p style="margin: 0.5rem 0; color: #666; font-size: 0.9rem;">Jl. Wates Dalam No.61, RT.02/RW.05</p>
-                                <p style="margin: 0.5rem 0; color: #666; font-size: 0.9rem;">Pasirmulya, Kec. Bogor Bar., Kota Bogor</p>
-                                <p style="margin: 0.5rem 0; color: #666; font-size: 0.9rem;">Jawa Barat 16118</p>
-                            </div>
-                            <div style="background: white; padding: 1rem; border-radius: 6px; margin-bottom: 1rem;">
-                                <p style="margin: 0.5rem 0; color: #333; font-size: 0.95rem;"><strong>⏰ Jam Operasional:</strong></p>
-                                <p style="margin: 0.5rem 0; color: #666; font-size: 0.9rem;">Senin - Minggu: 07:00 - 13:00 WIB</p>
-                                <p style="margin: 0.5rem 0; color: #666; font-size: 0.9rem;">Libur pada hari raya nasional</p>
-                            </div>
-                            <div style="background: white; padding: 1rem; border-radius: 6px;">
-                                <p style="margin: 0.5rem 0; color: #333; font-size: 0.95rem;"><strong>📞 Hubungi Kami:</strong></p>
-                                <p style="margin: 0.5rem 0; color: #666; font-size: 0.9rem;">WhatsApp: +62 821-1997-9538</p>
-                                <p style="margin: 0.5rem 0; color: #666; font-size: 0.9rem;">Email: destidwinursanti.d3@gmail.com</p>
-                            </div>
-                            <p style="margin: 1rem 0 0 0; font-size: 0.85rem; color: #558b2f; font-weight: 600;">✓ Pesanan siap diambil sesuai waktu yang disepakati dengan Admin</p>
+                    <!-- Delivery Method Card -->
+                    <div style="background: white; border-radius: 12px; padding: 1.25rem; margin-bottom: 1rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+                        <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem;">
+                            <div style="width: 40px; height: 40px; background: #f0f0f0; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.25rem;">🚚</div>
+                            <h3 style="font-size: 1rem; font-weight: 600; color: #333; margin: 0;">Metode Pengiriman</h3>
                         </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Catatan Pesanan (Opsional)</label>
-                        <textarea rows="2" name="notes" placeholder="Contoh: Pencet Bel/Hubungi No. Telp/Catatan Lainnya"></textarea>
-                    </div>
-
-                    <div class="form-group">
-                        <label style="margin-bottom: 1rem; display: block;">Metode Pembayaran *</label>
-                        <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
-                            <label style="flex: 1; padding: 1rem; border: 2px solid var(--primary); border-radius: 8px; cursor: pointer; transition: all 0.3s; background: #fffcf5;">
-                                <input type="radio" name="payment_method" value="QRIS" checked style="cursor: pointer;">
-                                <span style="font-weight: 600; display: block; margin-bottom: 0.25rem;">📱 QRIS (E-Wallet/Banking)</span>
-                                <span style="font-size: 0.85rem; color: #666;">Transfer via QRIS, E-Wallet, atau Banking</span>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+                            <label class="delivery-option" data-method="delivery" style="position: relative; padding: 1rem; border: 2px solid #ee4d2d; border-radius: 10px; cursor: pointer; transition: all 0.2s; background: #fff5f5;">
+                                <input type="radio" name="shipping_method" value="delivery" checked onclick="toggleAddressFields('delivery')" style="position: absolute; opacity: 0;">
+                                <div style="text-align: center;">
+                                    <div style="font-size: 1.75rem; margin-bottom: 0.5rem;">🛵</div>
+                                    <div style="font-weight: 600; font-size: 0.9rem; color: #333;">Diantar</div>
+                                    <div style="font-size: 0.75rem; color: #666; margin-top: 0.25rem;">Kami antar</div>
+                                </div>
+                            </label>
+                            <label class="delivery-option" data-method="pickup" style="position: relative; padding: 1rem; border: 2px solid #e0e0e0; border-radius: 10px; cursor: pointer; transition: all 0.2s;">
+                                <input type="radio" name="shipping_method" value="pickup" onclick="toggleAddressFields('pickup')" style="position: absolute; opacity: 0;">
+                                <div style="text-align: center;">
+                                    <div style="font-size: 1.75rem; margin-bottom: 0.5rem;">🏪</div>
+                                    <div style="font-weight: 600; font-size: 0.9rem; color: #333;">Ambil Sendiri</div>
+                                    <div style="font-size: 0.75rem; color: #666; margin-top: 0.25rem;">Ke toko</div>
+                                </div>
                             </label>
                         </div>
                     </div>
 
-                    <button type="submit" class="checkout-btn">Proses Pesanan</button>
+                    <!-- Address Card (for delivery) -->
+                    <div id="addressSection" style="background: white; border-radius: 12px; padding: 1.25rem; margin-bottom: 1rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+                        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem;">
+                            <div style="display: flex; align-items: center; gap: 0.75rem;">
+                                <div style="width: 40px; height: 40px; background: #f0f0f0; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.25rem;">📍</div>
+                                <h3 style="font-size: 1rem; font-weight: 600; color: #333; margin: 0;">Alamat Pengiriman</h3>
+                            </div>
+                            <div style="display: flex; gap: 0.5rem;">
+                                @auth('customer')
+                                    <button type="button" onclick="showAddressSelector()" style="background: #FF6B35; color: white; border: none; padding: 0.5rem 1rem; border-radius: 6px; font-size: 0.85rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 0.5rem;">
+                                        <span>📋</span> Pilih Alamat
+                                    </button>
+                                @endauth
+                                <button type="button" onclick="detectLocation()" style="background: #ee4d2d; color: white; border: none; padding: 0.5rem 1rem; border-radius: 6px; font-size: 0.85rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 0.5rem;">
+                                    <span>📍</span> Deteksi Lokasi
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Search Address -->
+                        <div style="margin-bottom: 1rem;">
+                            <div style="position: relative;">
+                                <input type="text" id="addressSearch" placeholder="🔍 Cari alamat atau gunakan GPS..." style="width: 100%; padding: 0.875rem; padding-left: 2.5rem; border: 1px solid #e0e0e0; border-radius: 8px; font-size: 0.95rem;" onfocus="this.style.borderColor='#ee4d2d'" onblur="this.style.borderColor='#e0e0e0'">
+                                <div style="position: absolute; left: 0.875rem; top: 50%; transform: translateY(-50%); color: #999; font-size: 1.1rem;">🔍</div>
+                            </div>
+                            <div id="addressSuggestions" style="display: none; background: white; border: 1px solid #e0e0e0; border-radius: 8px; margin-top: 0.5rem; max-height: 200px; overflow-y: auto; box-shadow: 0 2px 8px rgba(0,0,0,0.1);"></div>
+                        </div>
+
+                        <!-- Address Details -->
+                        <div style="background: #f8f8f8; border-radius: 8px; padding: 1rem; margin-bottom: 1rem;">
+                            <div style="margin-bottom: 0.75rem;">
+                                <input type="text" name="street" id="streetInput" required placeholder="Nama Jalan" style="width: 100%; padding: 0.75rem; border: 1px solid #e0e0e0; border-radius: 6px; font-size: 0.9rem; background: white;">
+                            </div>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-bottom: 0.75rem;">
+                                <input type="text" name="house_number" placeholder="No. Rumah" style="padding: 0.75rem; border: 1px solid #e0e0e0; border-radius: 6px; font-size: 0.9rem; background: white;">
+                                <input type="text" name="rt_rw" placeholder="RT/RW" style="padding: 0.75rem; border: 1px solid #e0e0e0; border-radius: 6px; font-size: 0.9rem; background: white;">
+                            </div>
+                            <div style="margin-bottom: 0.75rem;">
+                                <input type="text" name="house_details" placeholder="Detail Alamat (opsional): Blok, patokan, dll" style="width: 100%; padding: 0.75rem; border: 1px solid #e0e0e0; border-radius: 6px; font-size: 0.9rem; background: white;">
+                            </div>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-bottom: 0.75rem;">
+                                <input type="text" name="district" placeholder="Kecamatan" style="padding: 0.75rem; border: 1px solid #e0e0e0; border-radius: 6px; font-size: 0.9rem; background: white;">
+                                <input type="text" name="city" id="cityInput" required placeholder="Kota" style="padding: 0.75rem; border: 1px solid #e0e0e0; border-radius: 6px; font-size: 0.9rem; background: white;">
+                            </div>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+                                <input type="text" name="province" placeholder="Provinsi" style="padding: 0.75rem; border: 1px solid #e0e0e0; border-radius: 6px; font-size: 0.9rem; background: white;">
+                                <input type="text" name="postal_code" placeholder="Kode Pos" style="padding: 0.75rem; border: 1px solid #e0e0e0; border-radius: 6px; font-size: 0.9rem; background: white;">
+                            </div>
+                        </div>
+
+                        <!-- Shipping Cost Display -->
+                        <div id="shippingCostCard" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 10px; padding: 1rem; color: white;">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <div>
+                                    <div style="font-size: 0.85rem; opacity: 0.9; margin-bottom: 0.25rem;">Ongkos Kirim</div>
+                                    <div style="font-size: 1.25rem; font-weight: 700;" id="shippingCostDisplay">Menghitung...</div>
+                                    <div style="font-size: 0.8rem; opacity: 0.8; margin-top: 0.25rem;" id="distanceDisplay"></div>
+                                </div>
+                                <div style="font-size: 2rem;">🚚</div>
+                            </div>
+                        </div>
+                        
+                        <input type="hidden" name="shipping_cost" id="shippingCostHidden" value="0">
+                        <input type="hidden" name="shipping_region" id="shippingRegionHidden">
+                        <input type="hidden" name="customer_lat" id="customerLat">
+                        <input type="hidden" name="customer_lng" id="customerLng">
+                    </div>
+
+                    <!-- Pickup Location Card -->
+                    <div id="pickupSection" style="display: none; background: white; border-radius: 12px; padding: 1.25rem; margin-bottom: 1rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+                        <div style="background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); border-radius: 10px; padding: 1.25rem; color: white;">
+                            <div style="font-size: 1.5rem; margin-bottom: 0.75rem;">🏪</div>
+                            <div style="font-weight: 700; font-size: 1.1rem; margin-bottom: 0.5rem;">Dapoer Budess Bakery</div>
+                            <div style="font-size: 0.9rem; opacity: 0.95; line-height: 1.5;">
+                                Jl. Wates Dalam No.61, RT.02/RW.05<br>
+                                Pasirmulya, Kec. Bogor Bar.<br>
+                                Kota Bogor, Jawa Barat 16118
+                            </div>
+                            <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid rgba(255,255,255,0.3);">
+                                <div style="font-size: 0.85rem; opacity: 0.9;">⏰ Senin - Minggu: 07:00 - 13:00 WIB</div>
+                                <div style="font-size: 0.85rem; opacity: 0.9; margin-top: 0.25rem;">📞 +62 821-1997-9538</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Notes Card -->
+                    <div style="background: white; border-radius: 12px; padding: 1.25rem; margin-bottom: 1rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+                        <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem;">
+                            <div style="width: 40px; height: 40px; background: #f0f0f0; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.25rem;">📝</div>
+                            <h3 style="font-size: 1rem; font-weight: 600; color: #333; margin: 0;">Catatan (Opsional)</h3>
+                        </div>
+                        <textarea name="notes" rows="3" placeholder="Contoh: Tolong hubungi saya dulu sebelum diantar" style="width: 100%; padding: 0.875rem; border: 1px solid #e0e0e0; border-radius: 8px; font-size: 0.95rem; resize: vertical; font-family: inherit;" onfocus="this.style.borderColor='#ee4d2d'" onblur="this.style.borderColor='#e0e0e0'"></textarea>
+                    </div>
+
+                    <!-- Payment Method Card -->
+                    <div style="background: white; border-radius: 12px; padding: 1.25rem; margin-bottom: 1rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+                        <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem;">
+                            <div style="width: 40px; height: 40px; background: #f0f0f0; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.25rem;">💳</div>
+                            <h3 style="font-size: 1rem; font-weight: 600; color: #333; margin: 0;">Metode Pembayaran</h3>
+                        </div>
+                        <label style="display: flex; align-items: center; gap: 1rem; padding: 1rem; border: 2px solid #ee4d2d; border-radius: 10px; cursor: pointer; background: #fff5f5;">
+                            <input type="radio" name="payment_method" value="QRIS" checked style="width: 20px; height: 20px; accent-color: #ee4d2d;">
+                            <div style="flex: 1;">
+                                <div style="font-weight: 600; font-size: 0.95rem; color: #333; margin-bottom: 0.25rem;">QRIS / Transfer</div>
+                                <div style="font-size: 0.8rem; color: #666;">E-Wallet, Mobile Banking, Internet Banking</div>
+                            </div>
+                            <div style="font-size: 1.5rem;">📱</div>
+                        </label>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <button type="submit" style="width: 100%; background: linear-gradient(135deg, #ee4d2d 0%, #ff6b35 100%); color: white; border: none; padding: 1rem; border-radius: 12px; font-size: 1.05rem; font-weight: 700; cursor: pointer; box-shadow: 0 4px 12px rgba(238, 77, 45, 0.3); transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+                        Buat Pesanan
+                    </button>
                 </form>
             </div>
         </section>
@@ -3772,6 +3951,76 @@
             <button class="checkout-btn" onclick="goToCheckout()">Lanjut ke Checkout</button>
         </div>
     </div>
+
+    <!-- Address Selector Modal -->
+    @auth('customer')
+    <div id="addressSelectorModal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 10000; align-items: center; justify-content: center;">
+        <div style="background: white; border-radius: 16px; width: 90%; max-width: 600px; max-height: 80vh; overflow-y: auto; padding: 0;">
+            <!-- Header -->
+            <div style="position: sticky; top: 0; background: white; padding: 20px; border-bottom: 2px solid #f0f0f0; display: flex; justify-content: space-between; align-items: center; border-radius: 16px 16px 0 0;">
+                <h2 style="font-size: 20px; font-weight: 700; color: #333; margin: 0;">Pilih Alamat Pengiriman</h2>
+                <button onclick="closeAddressSelector()" style="background: none; border: none; font-size: 28px; cursor: pointer; color: #999; line-height: 1;">&times;</button>
+            </div>
+
+            <!-- Address List -->
+            <div style="padding: 20px;">
+                @foreach(auth()->guard('customer')->user()->addresses()->active()->get() as $address)
+                    <div onclick="selectAddress({{ $address->id }})" style="border: 2px solid {{ $address->is_primary ? '#FF6B35' : '#e0e0e0' }}; border-radius: 12px; padding: 16px; margin-bottom: 12px; cursor: pointer; transition: all 0.2s; position: relative; background: {{ $address->is_primary ? '#FFF9F5' : 'white' }};" 
+                         onmouseover="if(!this.style.borderColor.includes('FF6B35')) this.style.borderColor='#FF6B35'" 
+                         onmouseout="if(!this.style.borderColor.includes('FF6B35') || {{ $address->is_primary ? 'false' : 'true' }}) this.style.borderColor='#e0e0e0'">
+                        
+                        @if($address->is_primary)
+                            <span style="position: absolute; top: 12px; right: 12px; background: #FF6B35; color: white; padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 600;">UTAMA</span>
+                        @endif
+
+                        <div style="display: inline-block; background: {{ $address->is_primary ? '#FFE0D1' : '#f0f0f0' }}; color: {{ $address->is_primary ? '#FF6B35' : '#666' }}; padding: 6px 12px; border-radius: 6px; font-size: 13px; font-weight: 600; margin-bottom: 12px;">
+                            {{ $address->label }}
+                        </div>
+
+                        <div style="font-size: 16px; font-weight: 600; color: #333; margin-bottom: 6px;">
+                            {{ $address->recipient_name }}
+                        </div>
+
+                        <div style="color: #666; font-size: 14px; margin-bottom: 8px;">
+                            {{ $address->phone }}
+                        </div>
+
+                        <div style="color: #666; font-size: 14px; line-height: 1.6;">
+                            {{ $address->address }}<br>
+                            {{ $address->district }}, {{ $address->city }}<br>
+                            {{ $address->province }} {{ $address->postal_code }}
+                        </div>
+
+                        <!-- Hidden data for JavaScript -->
+                        <input type="hidden" class="address-data" 
+                               data-id="{{ $address->id }}"
+                               data-name="{{ $address->recipient_name }}"
+                               data-phone="{{ $address->phone }}"
+                               data-street="{{ $address->address }}"
+                               data-house-number="{{ $address->house_number ?? '' }}"
+                               data-rt-rw="{{ $address->rt_rw ?? '' }}"
+                               data-city="{{ $address->city }}"
+                               data-district="{{ $address->district }}"
+                               data-province="{{ $address->province }}"
+                               data-postal="{{ $address->postal_code }}"
+                               data-details="{{ $address->address_detail }}">
+                    </div>
+                @endforeach
+
+                @if(auth()->guard('customer')->user()->addresses()->active()->count() == 0)
+                    <div style="text-align: center; padding: 40px 20px;">
+                        <div style="font-size: 60px; margin-bottom: 16px; opacity: 0.3;">📍</div>
+                        <h3 style="font-size: 18px; color: #666; margin-bottom: 12px;">Belum Ada Alamat</h3>
+                        <p style="color: #999; margin-bottom: 20px;">Tambahkan alamat terlebih dahulu</p>
+                        <a href="/customer/addresses" style="background: #FF6B35; color: white; padding: 12px 24px; border-radius: 8px; text-decoration: none; display: inline-block; font-weight: 600;">
+                            + Tambah Alamat
+                        </a>
+                    </div>
+                @endif
+            </div>
+        </div>
+    </div>
+    @endauth
 
     <!-- Message Modal -->
     <div class="message-modal" id="messageModal">
@@ -4061,23 +4310,24 @@
                 const name = (product.name || 'Produk Roti').replace(/[`$\\]/g, '\\$&');
 
                 return `
-                    <div class="product-card" data-category="${product.category}">
+                    <div class="product-card" data-category="${product.category}" data-product-id="${product.id}">
                         ${badgeText ? `<div class="product-promo-badge">${badgeText}</div>` : ''}
                         <div class="product-image-wrapper">
 
                             <div class="product-image">
-                                ${product.image ? `<img src="${product.image}" alt="${name}" style="width:100%;height:100%;object-fit:cover;">` : `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:#ccc;font-size:3rem;">🍞</div>`}
+                                ${product.image ? `<img src="${product.image}" alt="${name}" class="product-image" style="width:100%;height:100%;object-fit:cover;">` : `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:#ccc;font-size:3rem;">🍞</div>`}
                             </div>
                         </div>
                         <div class="product-info">
                             <h3 class="product-name">${name}</h3>
-                            <p class="product-description">${description}</p>
+                            <p class="product-description" style="display:none;">${description}</p>
+                            <p class="product-description-short">${description}</p>
                             ${stockStatus.label ? `<div style="margin:0.75rem 0;padding:0.5rem 0.75rem;background:${stockBgColors[stockStatus.color] || '#f3f4f6'};border-left:3px solid ${stockColors[stockStatus.color] || '#9ca3af'};border-radius:0.5rem;font-size:0.8rem;font-weight:600;color:${stockColors[stockStatus.color] || '#4b5563'};text-align:center;">${stockStatus.label}</div>` : ''}
                             <div class="price-container">
-                                ${product.is_discount_active ? `<span class="price-old">Rp ${(product.price || 0).toLocaleString('id-ID')}</span><span class="price-new">Rp ${(product.effective_price || 0).toLocaleString('id-ID')}</span>` : `<span class="price-new">Rp ${(product.price || 0).toLocaleString('id-ID')}</span>`}
+                                <span class="product-price">${product.is_discount_active ? `<span class="price-old">Rp ${(product.price || 0).toLocaleString('id-ID')}</span><span class="price-new">Rp ${(product.effective_price || 0).toLocaleString('id-ID')}</span>` : `<span class="price-new">Rp ${(product.price || 0).toLocaleString('id-ID')}</span>`}</span>
                             </div>
                             <p style="font-size:0.8rem;color:#888;margin-bottom:0.75rem;">${randomTagline}</p>
-                            <button class="cta-button" onclick="addToCart(${product.id}, ${!!stockStatus.is_preorder})" ${buttonDisabled ? 'disabled' : ''}>${buttonText}</button>
+                            <button class="cta-button add-to-cart-btn" onclick="addToCart(${product.id}, ${!!stockStatus.is_preorder})" ${buttonDisabled ? 'disabled' : ''}>${buttonText}</button>
                         </div>
                     </div>`;
             }).join('');
@@ -4275,6 +4525,25 @@
             document.getElementById('subtotal').textContent = `Rp ${subtotal.toLocaleString('id-ID')}`;
             document.getElementById('total').textContent = `Rp ${subtotal.toLocaleString('id-ID')}`;
         }
+        
+        function updateShippingCost() {
+            const select = document.getElementById('shippingRegion');
+            const display = document.getElementById('shippingCostDisplay');
+            
+            if (select && display) {
+                const selectedOption = select.options[select.selectedIndex];
+                const cost = selectedOption.getAttribute('data-cost');
+                
+                if (cost && cost > 0) {
+                    const formattedCost = parseInt(cost).toLocaleString('id-ID');
+                    display.textContent = `Rp ${formattedCost}`;
+                    display.style.color = '#1565c0';
+                } else {
+                    display.textContent = 'Pilih wilayah terlebih dahulu';
+                    display.style.color = '#999';
+                }
+            }
+        }
 
         function updateQuantity(productId, change) {
             const item = cart.find(item => item.id === productId);
@@ -4295,9 +4564,94 @@
             document.getElementById('cartOverlay').classList.toggle('active');
         }
 
+        // Address Selector Functions
+        function showAddressSelector() {
+            const modal = document.getElementById('addressSelectorModal');
+            if (modal) {
+                modal.style.display = 'flex';
+            }
+        }
+
+        function closeAddressSelector() {
+            const modal = document.getElementById('addressSelectorModal');
+            if (modal) {
+                modal.style.display = 'none';
+            }
+        }
+
+        function selectAddress(addressId) {
+            // Find the address data
+            const addressElement = document.querySelector(`.address-data[data-id="${addressId}"]`);
+            if (!addressElement) return;
+
+            // Get address data
+            const data = {
+                name: addressElement.dataset.name,
+                phone: addressElement.dataset.phone,
+                street: addressElement.dataset.street,
+                houseNumber: addressElement.dataset.houseNumber,
+                rtRw: addressElement.dataset.rtRw,
+                city: addressElement.dataset.city,
+                district: addressElement.dataset.district,
+                province: addressElement.dataset.province,
+                postal: addressElement.dataset.postal,
+                details: addressElement.dataset.details
+            };
+
+            // Fill checkout form
+            const nameInput = document.querySelector('input[name="customer_name"]');
+            const phoneInput = document.querySelector('input[name="customer_phone"]');
+            const streetInput = document.querySelector('input[name="street"]');
+            const houseNumberInput = document.querySelector('input[name="house_number"]');
+            const rtRwInput = document.querySelector('input[name="rt_rw"]');
+            const cityInput = document.querySelector('input[name="city"]');
+            const districtInput = document.querySelector('input[name="district"]');
+            const provinceInput = document.querySelector('input[name="province"]');
+            const postalInput = document.querySelector('input[name="postal_code"]');
+            const houseDetailsInput = document.querySelector('input[name="house_details"]');
+
+            if (nameInput) nameInput.value = data.name;
+            if (phoneInput) phoneInput.value = data.phone;
+            if (streetInput) streetInput.value = data.street;
+            if (houseNumberInput) houseNumberInput.value = data.houseNumber;
+            if (rtRwInput) rtRwInput.value = data.rtRw;
+            if (cityInput) cityInput.value = data.city;
+            if (districtInput) districtInput.value = data.district;
+            if (provinceInput) provinceInput.value = data.province;
+            if (postalInput) postalInput.value = data.postal;
+            if (houseDetailsInput) houseDetailsInput.value = data.details;
+
+            // Close modal
+            closeAddressSelector();
+
+            // Show success notification
+            console.log('✅ Alamat berhasil dipilih:', data.street);
+            
+            // Optional: Show toast notification
+            const toast = document.createElement('div');
+            toast.textContent = '✅ Alamat berhasil dipilih!';
+            toast.style.cssText = 'position: fixed; top: 20px; right: 20px; background: #4CAF50; color: white; padding: 16px 24px; border-radius: 8px; font-weight: 600; z-index: 10001; box-shadow: 0 4px 12px rgba(0,0,0,0.15);';
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 3000);
+            
+            // Auto-calculate shipping after address is selected
+            setTimeout(() => {
+                autoCalculateShipping();
+            }, 500);
+        }
+
+        // Close modal when clicking outside
+        document.addEventListener('click', function(e) {
+            const modal = document.getElementById('addressSelectorModal');
+            if (modal && e.target === modal) {
+                closeAddressSelector();
+            }
+        });
+
         let slideIndex = 0;
         const slides = document.querySelectorAll('.slide');
         const dots = document.querySelectorAll('.dot');
+        let autoSlideInterval;
 
         function showSlide(n) {
             if (n >= slides.length) slideIndex = 0;
@@ -4308,9 +4662,45 @@
             dots[slideIndex].classList.add('active');
         }
 
-        function moveSlide(n) { slideIndex += n; showSlide(slideIndex); }
-        function currentSlide(n) { slideIndex = n; showSlide(slideIndex); }
-        window.addEventListener('load', () => showSlide(0));
+        function moveSlide(n) { 
+            slideIndex += n; 
+            showSlide(slideIndex);
+            resetAutoSlide();
+        }
+        
+        function currentSlide(n) { 
+            slideIndex = n; 
+            showSlide(slideIndex);
+            resetAutoSlide();
+        }
+
+        function startAutoSlide() {
+            autoSlideInterval = setInterval(() => {
+                slideIndex++;
+                showSlide(slideIndex);
+            }, 5000); // Auto-slide every 5 seconds
+        }
+
+        function stopAutoSlide() {
+            clearInterval(autoSlideInterval);
+        }
+
+        function resetAutoSlide() {
+            stopAutoSlide();
+            startAutoSlide();
+        }
+
+        // Pause on hover
+        const heroSlider = document.querySelector('.hero-slider');
+        if (heroSlider) {
+            heroSlider.addEventListener('mouseenter', stopAutoSlide);
+            heroSlider.addEventListener('mouseleave', startAutoSlide);
+        }
+
+        window.addEventListener('load', () => {
+            showSlide(0);
+            startAutoSlide();
+        });
 
         function showSection(sectionId) {
             document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
@@ -4363,28 +4753,201 @@
         function toggleAddressFields(method) {
             const addressSection = document.getElementById('addressSection');
             const pickupSection = document.getElementById('pickupSection');
-            const deliveryLabel = document.getElementById('shipping-delivery');
-            const pickupLabel = document.getElementById('shipping-pickup');
-            const shippingInfoBox = document.getElementById('shippingInfoBox');
+            
+            // Update delivery option styles
+            document.querySelectorAll('.delivery-option').forEach(opt => {
+                const isSelected = opt.dataset.method === method;
+                opt.style.borderColor = isSelected ? '#ee4d2d' : '#e0e0e0';
+                opt.style.background = isSelected ? '#fff5f5' : 'white';
+            });
+            
             if (method === 'delivery') {
-                deliveryLabel.style.borderColor = 'var(--primary)';
-                deliveryLabel.style.backgroundColor = '#fffcf5';
-                pickupLabel.style.borderColor = '#ddd';
-                pickupLabel.style.backgroundColor = 'white';
                 addressSection.style.display = 'block';
                 pickupSection.style.display = 'none';
-                if (shippingInfoBox) shippingInfoBox.style.display = 'block';
-                addressSection.querySelectorAll('input').forEach(input => { if (input.name !== 'house_details') input.required = true; });
+                addressSection.querySelectorAll('input[required]').forEach(input => input.required = true);
             } else {
-                pickupLabel.style.borderColor = 'var(--primary)';
-                pickupLabel.style.backgroundColor = '#fffcf5';
-                deliveryLabel.style.borderColor = '#ddd';
-                deliveryLabel.style.backgroundColor = 'white';
                 addressSection.style.display = 'none';
                 pickupSection.style.display = 'block';
-                if (shippingInfoBox) shippingInfoBox.style.display = 'none';
-                addressSection.querySelectorAll('input').forEach(input => { input.required = false; });
+                addressSection.querySelectorAll('input').forEach(input => input.required = false);
+                // Reset shipping cost to 0 for pickup
+                document.getElementById('shippingCostHidden').value = 0;
+                document.getElementById('shippingCostDisplay').textContent = 'Rp 0';
+                document.getElementById('distanceDisplay').textContent = 'Ambil sendiri di toko';
             }
+        }
+        
+        // Koordinat toko (ganti dengan koordinat toko sebenarnya)
+        const STORE_LAT = -6.5894; // Contoh: Bogor
+        const STORE_LNG = 106.7989;
+        const BASE_RATE = 5000; // Biaya dasar
+        const PER_KM_RATE = 2000; // Per kilometer
+        const MAX_DISTANCE = 15; // Maksimal jarak pengiriman (km)
+        
+        // Deteksi lokasi menggunakan GPS
+        function detectLocation() {
+            const btn = event.target;
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<span>⏳</span> Mendeteksi...';
+            btn.disabled = true;
+            
+            if (!navigator.geolocation) {
+                showNotification('❌ Browser Anda tidak mendukung GPS');
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+                return;
+            }
+            
+            navigator.geolocation.getCurrentPosition(
+                async (position) => {
+                    const lat = position.coords.latitude;
+                    const lng = position.coords.longitude;
+                    
+                    // Simpan koordinat
+                    document.getElementById('customerLat').value = lat;
+                    document.getElementById('customerLng').value = lng;
+                    
+                    // Hitung ongkir
+                    calculateShipping(lat, lng);
+                    
+                    // Reverse geocoding untuk mendapatkan alamat
+                    try {
+                        const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`);
+                        const data = await response.json();
+                        
+                        if (data && data.address) {
+                            // Isi form otomatis
+                            const addr = data.address;
+                            document.getElementById('streetInput').value = addr.road || addr.suburb || '';
+                            document.getElementById('cityInput').value = addr.city || addr.town || addr.village || '';
+                            
+                            showNotification('✅ Lokasi berhasil terdeteksi!');
+                        }
+                    } catch (error) {
+                        console.error('Geocoding error:', error);
+                        showNotification('✅ Lokasi terdeteksi, silakan lengkapi alamat');
+                    }
+                    
+                    btn.innerHTML = originalText;
+                    btn.disabled = false;
+                },
+                (error) => {
+                    console.error('Geolocation error:', error);
+                    showNotification('❌ Gagal mendeteksi lokasi. Pastikan GPS aktif dan izinkan akses lokasi.');
+                    btn.innerHTML = originalText;
+                    btn.disabled = false;
+                },
+                { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+            );
+        }
+        
+        // Hitung jarak menggunakan Haversine formula
+        function calculateDistance(lat1, lon1, lat2, lon2) {
+            const R = 6371; // Radius bumi dalam km
+            const dLat = (lat2 - lat1) * Math.PI / 180;
+            const dLon = (lon2 - lon1) * Math.PI / 180;
+            const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                      Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+                      Math.sin(dLon/2) * Math.sin(dLon/2);
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+            return R * c;
+        }
+        
+        // Hitung ongkir berdasarkan jarak
+        function calculateShipping(customerLat, customerLng) {
+            const distance = calculateDistance(STORE_LAT, STORE_LNG, customerLat, customerLng);
+            const distanceKm = Math.round(distance * 10) / 10; // Bulatkan 1 desimal
+            
+            const display = document.getElementById('shippingCostDisplay');
+            const distanceDisplay = document.getElementById('distanceDisplay');
+            
+            if (distance > MAX_DISTANCE) {
+                display.textContent = 'Diluar jangkauan';
+                display.style.color = '#ff4444';
+                distanceDisplay.textContent = `Jarak: ${distanceKm} km (Maks: ${MAX_DISTANCE} km)`;
+                showNotification(`❌ Maaf, jarak pengiriman maksimal ${MAX_DISTANCE} km`);
+                // Reset shipping cost
+                document.getElementById('shippingCostHidden').value = 0;
+                return;
+            }
+            
+            // Hitung ongkir
+            const effectiveDistance = Math.max(distance, 1); // Minimal 1 km
+            let shippingCost = BASE_RATE + (effectiveDistance * PER_KM_RATE);
+            shippingCost = Math.ceil(shippingCost / 1000) * 1000; // Bulatkan ke ribuan
+            
+            display.textContent = `Rp ${shippingCost.toLocaleString('id-ID')}`;
+            distanceDisplay.textContent = `Jarak: ${distanceKm} km dari toko`;
+            
+            // Simpan shipping cost ke hidden input untuk dikirim ke backend
+            document.getElementById('shippingCostHidden').value = shippingCost;
+            
+            console.log('Shipping cost calculated:', shippingCost);
+        }
+
+        // Auto-calculate shipping when address is filled
+        let geocodeTimeout = null;
+        async function autoCalculateShipping() {
+            const streetInput = document.getElementById('streetInput');
+            const cityInput = document.getElementById('cityInput');
+            const districtInput = document.querySelector('input[name="district"]');
+            const provinceInput = document.querySelector('input[name="province"]');
+            
+            const street = streetInput?.value.trim() || '';
+            const city = cityInput?.value.trim() || '';
+            const district = districtInput?.value.trim() || '';
+            const province = provinceInput?.value.trim() || '';
+            
+            // Need at least city to geocode
+            if (!city || city.length < 3) {
+                return;
+            }
+            
+            // Build full address for better geocoding
+            const addressParts = [street, district, city, province, 'Indonesia'].filter(p => p);
+            const fullAddress = addressParts.join(', ');
+            
+            try {
+                // Show loading state
+                const display = document.getElementById('shippingCostDisplay');
+                const distanceDisplay = document.getElementById('distanceDisplay');
+                display.textContent = '⏳ Menghitung...';
+                display.style.color = '#666';
+                distanceDisplay.textContent = 'Sedang mendeteksi lokasi...';
+                
+                // Geocode the address
+                const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(fullAddress)}&limit=1`);
+                const data = await response.json();
+                
+                if (data && data.length > 0) {
+                    const lat = parseFloat(data[0].lat);
+                    const lng = parseFloat(data[0].lon);
+                    
+                    // Save coordinates
+                    document.getElementById('customerLat').value = lat;
+                    document.getElementById('customerLng').value = lng;
+                    
+                    // Calculate shipping
+                    calculateShipping(lat, lng);
+                } else {
+                    // Geocoding failed
+                    display.textContent = 'Gunakan GPS';
+                    display.style.color = '#999';
+                    distanceDisplay.textContent = 'Klik tombol "Deteksi Lokasi" untuk menghitung ongkir';
+                }
+            } catch (error) {
+                console.error('Auto-geocoding error:', error);
+                const display = document.getElementById('shippingCostDisplay');
+                const distanceDisplay = document.getElementById('distanceDisplay');
+                display.textContent = 'Gunakan GPS';
+                display.style.color = '#999';
+                distanceDisplay.textContent = 'Klik tombol "Deteksi Lokasi" untuk menghitung ongkir';
+            }
+        }
+        
+        // Debounced auto-calculation
+        function triggerAutoCalculate() {
+            clearTimeout(geocodeTimeout);
+            geocodeTimeout = setTimeout(autoCalculateShipping, 1500); // Wait 1.5s after user stops typing
         }
 
         function handleCheckoutSubmit(event) {
@@ -4895,7 +5458,10 @@
                         if (chatContainer && wasAtBottom) setTimeout(() => { chatContainer.scrollTop = chatContainer.scrollHeight; }, 100);
                     }
                     await fetch('/messages/mark-read', { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content') }, body: JSON.stringify({ phone: currentPhone }) });
-                    document.getElementById('msgBadge').style.display = 'none';
+                    const badge = document.getElementById('msgBadge');
+                    const pulse = document.getElementById('msgPulse');
+                    if (badge) badge.style.display = 'none';
+                    if (pulse) pulse.style.display = 'none';
                 } else {
                     const response = await fetch(`/messages/unread/${encodeURIComponent(currentPhone)}`);
                     const data = await response.json();
@@ -4905,10 +5471,10 @@
                         if (data.unread_count > 0) { 
                             badge.style.display = 'flex'; 
                             badge.textContent = data.unread_count > 9 ? '9+' : data.unread_count; 
-                            if (pulse) pulse.style.display = 'block'; // Show pulse when unread
+                            if (pulse) pulse.style.display = 'block';
                         } else { 
                             badge.style.display = 'none'; 
-                            if (pulse) pulse.style.display = 'none'; // Hide pulse when no unread
+                            if (pulse) pulse.style.display = 'none';
                         } 
                     }
                 }
@@ -4990,7 +5556,6 @@
             
             if (!product) {
                 // If not found in main products, create a temporary item
-                // This shouldn't happen if names are synced
                 const tempProduct = {
                     id: 'promo-' + Date.now(),
                     name: productName,
@@ -5023,8 +5588,9 @@
             }
             
             updateCart();
-            closePromoModal();
-            toggleCart(); // Show cart after adding
+            // Jangan tutup modal dan jangan buka cart otomatis
+            // closePromoModal();
+            // toggleCart();
             showNotification(`✅ ${productName} ditambahkan ke keranjang!`);
         }
 
@@ -5032,6 +5598,23 @@
             const m = document.getElementById('navMenu');
             if (m) m.classList.toggle('open');
         }
+
+        // Toggle user dropdown menu
+        function toggleUserMenu() {
+            const dropdown = document.getElementById('userDropdown');
+            if (dropdown) {
+                dropdown.style.display = dropdown.style.display === 'none' ? 'block' : 'none';
+            }
+        }
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(event) {
+            const userMenu = document.querySelector('.user-menu');
+            const dropdown = document.getElementById('userDropdown');
+            if (userMenu && dropdown && !userMenu.contains(event.target)) {
+                dropdown.style.display = 'none';
+            }
+        });
 
         const style = document.createElement('style');
         style.textContent = `
@@ -5042,6 +5625,27 @@
             }
             @keyframes slideInRight { from { transform: translateX(400px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
             @keyframes slideOutRight { from { transform: translateX(0); opacity: 1; } to { transform: translateX(400px); opacity: 0; } }
+            
+            /* User dropdown hover effects */
+            .user-dropdown a:hover,
+            .user-dropdown button:hover {
+                background: rgba(139, 69, 19, 0.05);
+            }
+            
+            .user-btn:hover {
+                background: rgba(255,255,255,0.1) !important;
+            }
+            
+            .login-btn:hover {
+                background: var(--cream) !important;
+                color: var(--primary) !important;
+                transform: translateY(-2px);
+            }
+            
+            .register-btn:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 6px 16px rgba(244, 164, 96, 0.4);
+            }
             @keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(0.8); } }
             @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
         `;
@@ -5101,6 +5705,79 @@
         }
 
         document.addEventListener('DOMContentLoaded', () => {
+            // Auto-fill customer data if logged in
+            @auth('customer')
+                @if(auth()->guard('customer')->user()->addresses()->where('is_primary', true)->exists())
+                    @php
+                        $primaryAddr = auth()->guard('customer')->user()->addresses()->where('is_primary', true)->first();
+                    @endphp
+                    const customerData = {
+                        name: "{{ auth()->guard('customer')->user()->name }}",
+                        phone: "{{ auth()->guard('customer')->user()->phone ?? '' }}",
+                        email: "{{ auth()->guard('customer')->user()->email }}",
+                        street: "{{ $primaryAddr->address }}",
+                        houseNumber: "{{ $primaryAddr->house_number ?? '' }}",
+                        rtRw: "{{ $primaryAddr->rt_rw ?? '' }}",
+                        city: "{{ $primaryAddr->city }}",
+                        district: "{{ $primaryAddr->district ?? '' }}",
+                        province: "{{ $primaryAddr->province ?? '' }}",
+                        postalCode: "{{ $primaryAddr->postal_code ?? '' }}",
+                        houseDetails: "{{ $primaryAddr->address_detail ?? '' }}"
+                    };
+
+                    // Fill form fields
+                    setTimeout(() => {
+                        const nameInput = document.querySelector('input[name="customer_name"]');
+                        const phoneInput = document.querySelector('input[name="customer_phone"]');
+                        const streetInput = document.querySelector('input[name="street"]');
+                        const houseNumberInput = document.querySelector('input[name="house_number"]');
+                        const rtRwInput = document.querySelector('input[name="rt_rw"]');
+                        const cityInput = document.querySelector('input[name="city"]');
+                        const districtInput = document.querySelector('input[name="district"]');
+                        const provinceInput = document.querySelector('input[name="province"]');
+                        const postalInput = document.querySelector('input[name="postal_code"]');
+                        const houseDetailsInput = document.querySelector('input[name="house_details"]');
+
+                        if (nameInput) nameInput.value = customerData.name;
+                        if (phoneInput) phoneInput.value = customerData.phone;
+                        if (streetInput) streetInput.value = customerData.street;
+                        if (houseNumberInput) houseNumberInput.value = customerData.houseNumber;
+                        if (rtRwInput) rtRwInput.value = customerData.rtRw;
+                        if (cityInput) cityInput.value = customerData.city;
+                        if (districtInput) districtInput.value = customerData.district;
+                        if (provinceInput) provinceInput.value = customerData.province;
+                        if (postalInput) postalInput.value = customerData.postalCode;
+                        if (houseDetailsInput) houseDetailsInput.value = customerData.houseDetails;
+
+                        console.log('✅ Customer data auto-filled from primary address');
+                        
+                        // Auto-calculate shipping after auto-fill
+                        setTimeout(() => {
+                            autoCalculateShipping();
+                        }, 500);
+                    }, 100);
+                @endif
+            @endauth
+
+            // Add event listeners for auto-calculation when address fields change
+            const cityInput = document.querySelector('input[name="city"]');
+            const streetInput = document.querySelector('input[name="street"]');
+            const districtInput = document.querySelector('input[name="district"]');
+            const provinceInput = document.querySelector('input[name="province"]');
+            
+            if (cityInput) {
+                cityInput.addEventListener('input', triggerAutoCalculate);
+            }
+            if (streetInput) {
+                streetInput.addEventListener('input', triggerAutoCalculate);
+            }
+            if (districtInput) {
+                districtInput.addEventListener('input', triggerAutoCalculate);
+            }
+            if (provinceInput) {
+                provinceInput.addEventListener('input', triggerAutoCalculate);
+            }
+
             initPromoCountdown();
             renderProducts('productsGrid', false);
             renderProducts('bestsellerGrid', true);
@@ -5109,6 +5786,7 @@
             const savedPhone = localStorage.getItem('customerPhone');
             if (savedPhone) { currentPhone = savedPhone; startMessagePolling(); }
             updateCart(); // Initialize cart counts
+            
             document.addEventListener('keydown', function(e) {
                 if (e.key === 'Escape') {
                     toggleCart();
@@ -5134,5 +5812,7 @@
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>AOS.init({ duration: 1000, once: true, offset: 100 });</script>
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <script src="/js/checkout-modern.js"></script>
+    <script src="{{ asset('js/homepage-enhanced.js') }}"></script>
 </body>
 </html>

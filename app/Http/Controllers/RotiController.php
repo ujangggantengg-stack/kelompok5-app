@@ -64,12 +64,22 @@ class RotiController extends Controller
         // Generate CAPTCHA for checkout
         $captcha = \App\Services\CaptchaService::generateMath();
 
+        // Get customer data if logged in
+        $customer = null;
+        $primaryAddress = null;
+        if (auth()->guard('customer')->check()) {
+            $customer = auth()->guard('customer')->user();
+            $primaryAddress = $customer->addresses()->where('is_primary', true)->first();
+        }
+
         return view('roti', [
             'products' => $products, 
             'reviews' => $reviews,
             'promo' => $promo,
             'modalProducts' => $modalProducts,
-            'captcha' => $captcha
+            'captcha' => $captcha,
+            'customer' => $customer,
+            'primaryAddress' => $primaryAddress
         ]);
     }
 
@@ -129,11 +139,16 @@ class RotiController extends Controller
                 'shipping_method' => 'required|string|in:delivery,pickup',
                 'city' => 'required_if:shipping_method,delivery|nullable|string',
                 'street' => 'required_if:shipping_method,delivery|nullable|string',
-                'house_number' => 'required_if:shipping_method,delivery|nullable|string',
-                'rt_rw' => 'required_if:shipping_method,delivery|nullable|string',
+                'house_number' => 'nullable|string',
+                'rt_rw' => 'nullable|string',
+                'district' => 'nullable|string',
+                'province' => 'nullable|string',
+                'postal_code' => 'nullable|string',
                 'house_details' => 'nullable|string',
                 'notes' => 'nullable|string',
                 'payment_method' => 'required|string',
+                'shipping_cost' => 'nullable|numeric|min:0', // Add shipping cost from form
+                'shipping_region' => 'nullable|string', // Optional region ID
                 'items' => 'required|array|min:1|max:10',
                 'items.*.product_id' => 'required|exists:products,id',
                 'items.*.product_name' => 'required|string',
@@ -193,8 +208,26 @@ class RotiController extends Controller
                     $itemsDescription[] = $item['quantity'] . 'x ' . $item['product_name'] . ' (Rp ' . number_format($item['price'], 0, ',', '.') . ')';
                 }
 
-                // Shipping is 0 initially, Admin will set it later for COD
+                // Get shipping cost from form or selected region
                 $shippingCost = 0;
+                
+                // Priority 1: Use shipping_cost from form (calculated by frontend)
+                if (isset($validated['shipping_cost']) && $validated['shipping_cost'] > 0) {
+                    $shippingCost = (float) $validated['shipping_cost'];
+                }
+                // Priority 2: Use shipping_region if provided
+                elseif (isset($validated['shipping_region']) && $validated['shipping_region']) {
+                    $shippingRate = \App\Models\ShippingRate::find($validated['shipping_region']);
+                    if ($shippingRate) {
+                        $shippingCost = $shippingRate->cost;
+                    }
+                }
+                
+                \Log::info('Shipping cost calculation', [
+                    'shipping_cost_from_form' => $validated['shipping_cost'] ?? null,
+                    'shipping_region' => $validated['shipping_region'] ?? null,
+                    'final_shipping_cost' => $shippingCost
+                ]);
 
                 // Final Total
                 $totalAmount = $subtotal + $shippingCost;
@@ -242,6 +275,7 @@ class RotiController extends Controller
                 $order = Order::create([
                     'order_number' => $orderNumber,
                     'message_thread_id' => $messageThread->id,
+                    'customer_id' => auth()->guard('customer')->id(), // Link to customer if logged in
                     'customer_name' => $validated['customer_name'],
                     'customer_phone' => $customerPhone,
                     'customer_email' => $validated['customer_email'] ?? null,
@@ -257,7 +291,7 @@ class RotiController extends Controller
                     'payment_proof' => $proofPath,
                     'total_amount' => $subtotal, // Use subtotal as amount (shipping added later)
                     'discount_amount' => 0, // Individual product discounts already in items price
-                    'shipping_cost' => 0,
+                    'shipping_cost' => $shippingCost,
                     'promo_id' => null,
                     'status' => $initialStatus,
                     'shipping_method' => $validated['shipping_method'],

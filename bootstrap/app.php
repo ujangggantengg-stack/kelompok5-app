@@ -15,9 +15,15 @@ return Application::configure(basePath: dirname(__DIR__))
             \App\Http\Middleware\HandleInertiaRequests::class,
             \Illuminate\Http\Middleware\AddLinkHeadersForPreloadedAssets::class,
         ]);
+        
+        // Use custom CSRF middleware
+        $middleware->validateCsrfTokens(except: [
+            // Add routes that should be excluded from CSRF verification if needed
+        ]);
 
         $middleware->alias([
             'is_admin' => \App\Http\Middleware\IsAdmin::class,
+            'auth.customer' => \App\Http\Middleware\CustomerAuth::class,
         ]);
 
         //
