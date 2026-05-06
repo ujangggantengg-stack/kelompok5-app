@@ -2227,14 +2227,18 @@
         }
 
         .message-close-btn {
-            position: absolute;
-            top: 1rem;
-            right: 1rem;
+            position: absolute !important;
+            top: 1rem !important;
+            right: 1rem !important;
+            left: auto !important;
             background: none;
             border: none;
             font-size: 1.5rem;
             cursor: pointer;
             color: var(--text);
+            z-index: 10;
+            margin: 0 !important;
+            transform: none !important;
         }
 
         .message-close-btn:hover { color: var(--primary); }
@@ -3350,13 +3354,45 @@
                             <span>Alamat</span>
                         </a>
                         <div style="border-top: 1px solid #eee; margin-top: 0.5rem;"></div>
-                        <form method="POST" action="{{ route('customer.logout') }}" style="margin: 0;">
+                        <form method="POST" action="{{ route('customer.logout') }}" style="margin: 0;" id="logoutForm">
                             @csrf
                             <button type="submit" style="width: 100%; display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 1rem; color: #dc3545; background: none; border: none; cursor: pointer; text-align: left; font-family: inherit; font-size: inherit; transition: background 0.2s;">
                                 <span>🚪</span>
                                 <span>Logout</span>
                             </button>
                         </form>
+                        <script>
+                            document.getElementById('logoutForm').addEventListener('submit', function(e) {
+                                e.preventDefault();
+                                const form = this;
+                                const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+                                
+                                fetch(form.action, {
+                                    method: 'POST',
+                                    headers: {
+                                        'X-CSRF-TOKEN': csrfToken,
+                                        'Accept': 'application/json',
+                                        'Content-Type': 'application/json'
+                                    },
+                                    body: JSON.stringify({})
+                                })
+                                .then(response => {
+                                    if (response.ok || response.redirected) {
+                                        window.location.href = '/';
+                                    } else if (response.status === 419) {
+                                        alert('Sesi Anda telah berakhir. Halaman akan dimuat ulang.');
+                                        window.location.reload();
+                                    } else {
+                                        throw new Error('Logout failed');
+                                    }
+                                })
+                                .catch(error => {
+                                    console.error('Logout error:', error);
+                                    // Fallback: just redirect to home
+                                    window.location.href = '/';
+                                });
+                            });
+                        </script>
                     </div>
                 </div>
             @else
@@ -4111,15 +4147,17 @@
 
     <!-- Purchase Modal -->
     <div class="message-modal" id="purchaseModal">
-        <div class="message-modal-content" style="max-width: 400px; text-align: center;">
+        <div class="message-modal-content" style="max-width: 400px; position: relative;">
             <button class="message-close-btn" onclick="closePurchaseModal()">×</button>
-            <h2 style="font-family: 'Playfair Display', serif; color: var(--primary); margin-bottom: 1rem; font-size: 1.5rem;">Pilih Opsi Pembelian</h2>
-            <div style="background: #f9f9f9; padding: 1.5rem; border-radius: 8px; margin-bottom: 1.5rem;">
-                <p style="color: #666; margin: 0; font-size: 0.95rem;">Apa yang ingin Anda lakukan?</p>
-            </div>
-            <div style="display: flex; flex-direction: column; gap: 1rem;">
-                <button onclick="addToCartOnly()" style="background: #f0f0f0; color: #333; border: 2px solid #ddd; padding: 1rem; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 1rem; transition: all 0.3s;">🛒 Masukkan Keranjang</button>
-                <button onclick="buyNow()" style="background: var(--primary); color: white; border: none; padding: 1rem; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 1rem; transition: all 0.3s;">⚡ Beli Sekarang</button>
+            <div style="text-align: center;">
+                <h2 style="font-family: 'Playfair Display', serif; color: var(--primary); margin-bottom: 1rem; font-size: 1.5rem;">Pilih Opsi Pembelian</h2>
+                <div style="background: #f9f9f9; padding: 1.5rem; border-radius: 8px; margin-bottom: 1.5rem;">
+                    <p style="color: #666; margin: 0; font-size: 0.95rem;">Apa yang ingin Anda lakukan?</p>
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 1rem;">
+                    <button onclick="addToCartOnly()" style="background: #f0f0f0; color: #333; border: 2px solid #ddd; padding: 1rem; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 1rem; transition: all 0.3s;">🛒 Masukkan Keranjang</button>
+                    <button onclick="buyNow()" style="background: var(--primary); color: white; border: none; padding: 1rem; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 1rem; transition: all 0.3s;">⚡ Beli Sekarang</button>
+                </div>
             </div>
         </div>
     </div>
@@ -5806,6 +5844,27 @@
                 });
             }
             setTimeout(() => { document.body.style.pointerEvents = 'auto'; }, 100);
+        });
+
+        // Auto-refresh CSRF token every 10 minutes to prevent 419 errors
+        setInterval(function() {
+            fetch('/test-csrf')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.csrf_token) {
+                        document.querySelector('meta[name="csrf-token"]').setAttribute('content', data.csrf_token);
+                        console.log('CSRF token refreshed');
+                    }
+                })
+                .catch(error => console.warn('Failed to refresh CSRF token:', error));
+        }, 600000); // 10 minutes
+
+        // Handle 419 errors globally
+        window.addEventListener('unhandledrejection', function(event) {
+            if (event.reason && event.reason.message && event.reason.message.includes('419')) {
+                alert('Sesi Anda telah berakhir. Halaman akan dimuat ulang.');
+                window.location.reload();
+            }
         });
     </script>
 
