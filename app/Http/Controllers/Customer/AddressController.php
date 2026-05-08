@@ -32,6 +32,8 @@ class AddressController extends Controller
             'recipient_name' => 'required|string|max:255',
             'phone' => 'required|string|max:20',
             'address' => 'required|string',
+            'house_number' => 'nullable|string|max:20',
+            'rt_rw' => 'nullable|string|max:20',
             'address_detail' => 'nullable|string',
             'city' => 'required|string|max:100',
             'district' => 'nullable|string|max:100',
@@ -64,6 +66,8 @@ class AddressController extends Controller
             'recipient_name' => 'required|string|max:255',
             'phone' => 'required|string|max:20',
             'address' => 'required|string',
+            'house_number' => 'nullable|string|max:20',
+            'rt_rw' => 'nullable|string|max:20',
             'address_detail' => 'nullable|string',
             'city' => 'required|string|max:100',
             'district' => 'nullable|string|max:100',
@@ -71,6 +75,7 @@ class AddressController extends Controller
             'postal_code' => 'nullable|string|max:10',
             'latitude' => 'nullable|numeric',
             'longitude' => 'nullable|numeric',
+            'is_primary' => 'boolean',
         ]);
 
         $address->update($validated);

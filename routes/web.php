@@ -63,6 +63,10 @@ Route::middleware('auth:customer')->prefix('customer')->name('customer.')->group
     Route::post('/orders/{id}/reorder', [\App\Http\Controllers\Customer\OrderController::class, 'reorder'])->name('orders.reorder');
 });
 
+Route::get('/javanese-bakery', function() {
+    return view('javanese-bakery');
+});
+
 /*
 |--------------------------------------------------------------------------
 | HALAMAN UTAMA (WEB ROTI - BLADE)

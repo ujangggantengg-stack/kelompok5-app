@@ -10,60 +10,75 @@ use Exception;
 
 class GoogleController extends Controller
 {
-    /**
-     * Redirect to Google OAuth
-     */
     public function redirect()
     {
-        return Socialite::driver('google')
-            ->stateless()
-            ->with(['guzzle' => ['verify' => false]])
-            ->redirect();
+        try {
+            // Cek apakah konfigurasi sudah diisi di .env
+            $clientId = env('GOOGLE_CLIENT_ID');
+            $clientSecret = env('GOOGLE_CLIENT_SECRET');
+
+            if ($clientId === 'masukkan_client_id_disini' || empty($clientId) || $clientSecret === 'masukkan_client_secret_disini' || empty($clientSecret)) {
+                return redirect()->route('customer.login')->with('error', 'Login Google belum dikonfigurasi dengan benar di file .env.');
+            }
+
+            return Socialite::driver('google')
+                ->stateless()
+                ->with(['guzzle' => ['verify' => false]])
+                ->redirect();
+        } catch (\Exception $e) {
+            \Log::error('Google Login Redirect Error: ' . $e->getMessage());
+            return redirect()->route('customer.login')->with('error', 'Terjadi kesalahan saat menghubungkan ke Google. Silakan coba lagi.');
+        }
     }
 
-    /**
-     * Handle Google OAuth callback
-     */
     public function callback()
     {
         try {
-            $googleUser = Socialite::driver('google')
+            $user = Socialite::driver('google')
                 ->stateless()
-                ->setHttpClient(new \GuzzleHttp\Client(['verify' => false]))
+                ->with(['guzzle' => ['verify' => false]])
                 ->user();
-            
-            // Check if customer already exists by email or google_id
-            $customer = Customer::where('google_id', $googleUser->id)
-                ->orWhere('email', $googleUser->email)
+
+            // Cari user berdasarkan google_id atau email
+            $customer = Customer::where('google_id', $user->id)
+                ->orWhere('email', $user->email)
                 ->first();
-            
-            if ($customer) {
-                // Update existing customer
-                $customer->update([
-                    'google_id' => $googleUser->id,
-                    'name' => $googleUser->name,
-                    'avatar' => $googleUser->avatar,
+
+            if (!$customer) {
+                // Register user baru jika belum ada
+                $customer = Customer::create([
+                    'name' => $user->name,
+                    'email' => $user->email,
+                    'google_id' => $user->id,
+                    'avatar' => $user->avatar,
+                    'password' => \Hash::make(\Str::random(24)), // Random password aman
                     'email_verified_at' => now(),
                 ]);
             } else {
-                // Create new customer
-                $customer = Customer::create([
-                    'google_id' => $googleUser->id,
-                    'name' => $googleUser->name,
-                    'email' => $googleUser->email,
-                    'avatar' => $googleUser->avatar,
-                    'email_verified_at' => now(),
-                    'password' => null, // No password for Google OAuth users
+                // Update data jika user sudah ada (misal update avatar atau link google_id)
+                $customer->update([
+                    'google_id' => $user->id,
+                    'avatar' => $user->avatar,
                 ]);
             }
 
-            Auth::guard('customer')->login($customer);
+            // Login menggunakan guard customer
+            Auth::guard('customer')->login($customer, true);
 
-            return redirect('/')->with('success', 'Berhasil login dengan Google!');
+            // Regenerate session untuk keamanan
+            request()->session()->regenerate();
+
+            return redirect()->intended('/')->with('success', 'Selamat Datang, ' . $customer->name . '! Berhasil masuk dengan Google.');
+        } catch (\Exception $e) {
+            \Log::error('Google Login Callback Error: ' . $e->getMessage());
             
-        } catch (Exception $e) {
-            \Log::error('Google OAuth Error: ' . $e->getMessage());
-            return redirect('/customer/login')->with('error', 'Gagal login dengan Google: ' . $e->getMessage());
+            // Pesan error yang lebih user-friendly
+            $errorMessage = 'Gagal masuk dengan Google.';
+            if (str_contains($e->getMessage(), '401')) {
+                $errorMessage = 'Konfigurasi Google tidak valid. Harap periksa Client ID dan Secret.';
+            }
+            
+            return redirect()->route('customer.login')->with('error', $errorMessage);
         }
     }
 }

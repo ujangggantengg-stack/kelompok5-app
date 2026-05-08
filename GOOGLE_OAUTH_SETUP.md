@@ -1,240 +1,310 @@
-# 🔐 Google OAuth Setup Guide
+# 🔐 Panduan Setup Google OAuth Login
 
-> **Status:** Optional - Tombol Google saat ini disembunyikan  
-> **Aktifkan:** Tambahkan credentials ke `.env`
+## 📋 Langkah-Langkah Mendapatkan Google Client ID & Secret
+
+### STEP 1: Buka Google Cloud Console
+
+1. Buka browser dan kunjungi: **https://console.cloud.google.com/**
+2. Login dengan akun Google Anda
 
 ---
 
-## 📋 Cara Setup Google OAuth
+### STEP 2: Buat Project Baru (atau Pilih Project yang Ada)
 
-### Step 1: Buat Project di Google Cloud Console
+#### Jika Belum Punya Project:
 
-1. **Buka Google Cloud Console:**
-   - Kunjungi: https://console.cloud.google.com/
+1. Klik dropdown **"Select a project"** di bagian atas
+2. Klik tombol **"NEW PROJECT"**
+3. Isi nama project: **"Dapoer Budess"** (atau nama lain)
+4. Klik **"CREATE"**
+5. Tunggu beberapa detik sampai project dibuat
+6. Pilih project yang baru dibuat
 
-2. **Buat Project Baru:**
-   - Klik "Select a project" → "New Project"
-   - Nama project: `Toko Roti` (atau nama lain)
-   - Klik "Create"
+#### Jika Sudah Punya Project:
 
-### Step 2: Enable Google+ API
+1. Klik dropdown **"Select a project"**
+2. Pilih project yang ingin digunakan
 
-1. **Buka API Library:**
-   - Di sidebar, pilih "APIs & Services" → "Library"
+---
 
-2. **Cari dan Enable:**
-   - Cari "Google+ API"
-   - Klik "Enable"
+### STEP 3: Aktifkan Google+ API
 
-### Step 3: Buat OAuth 2.0 Credentials
+1. Di sidebar kiri, klik **"APIs & Services"** → **"Library"**
+2. Cari **"Google+ API"** di search box
+3. Klik **"Google+ API"**
+4. Klik tombol **"ENABLE"**
+5. Tunggu sampai API aktif
 
-1. **Buka Credentials:**
-   - Di sidebar, pilih "APIs & Services" → "Credentials"
+**ATAU** cari **"Google Identity"** dan aktifkan
 
-2. **Configure Consent Screen:**
-   - Klik "Configure Consent Screen"
-   - Pilih "External" → "Create"
-   - Isi informasi:
-     - App name: `Toko Roti`
-     - User support email: email Anda
-     - Developer contact: email Anda
-   - Klik "Save and Continue"
-   - Skip "Scopes" → "Save and Continue"
-   - Skip "Test users" → "Save and Continue"
+---
 
-3. **Create OAuth Client ID:**
-   - Klik "Create Credentials" → "OAuth client ID"
-   - Application type: "Web application"
-   - Name: `Toko Roti Web Client`
-   
-4. **Authorized redirect URIs:**
-   Tambahkan URL berikut (sesuaikan dengan domain Anda):
-   
-   **Development:**
-   ```
-   http://localhost:8000/auth/google/callback
-   http://127.0.0.1:8000/auth/google/callback
-   ```
-   
-   **Production (nanti):**
-   ```
-   https://yourdomain.com/auth/google/callback
-   ```
+### STEP 4: Buat OAuth Consent Screen
 
-5. **Klik "Create"**
-   - Copy **Client ID** dan **Client Secret**
+1. Di sidebar kiri, klik **"APIs & Services"** → **"OAuth consent screen"**
+2. Pilih **"External"** (untuk testing)
+3. Klik **"CREATE"**
 
-### Step 4: Update .env File
+#### Isi Form OAuth Consent Screen:
 
-Tambahkan credentials ke file `.env`:
+**App Information:**
+- **App name**: `Dapoer Budess`
+- **User support email**: Pilih email Anda
+- **App logo**: (opsional, bisa diisi nanti)
 
-```env
-# Google OAuth
-GOOGLE_CLIENT_ID=your-client-id-here.apps.googleusercontent.com
-GOOGLE_CLIENT_SECRET=your-client-secret-here
-GOOGLE_REDIRECT_URI=http://localhost:8000/auth/google/callback
+**App Domain:**
+- **Application home page**: `http://127.0.0.1:8000`
+- **Application privacy policy link**: `http://127.0.0.1:8000/privacy` (buat halaman ini nanti)
+- **Application terms of service link**: `http://127.0.0.1:8000/terms` (buat halaman ini nanti)
+
+**Developer contact information:**
+- **Email addresses**: Masukkan email Anda
+
+4. Klik **"SAVE AND CONTINUE"**
+
+#### Scopes (Langkah 2):
+1. Klik **"ADD OR REMOVE SCOPES"**
+2. Pilih scope berikut:
+   - `userinfo.email`
+   - `userinfo.profile`
+   - `openid`
+3. Klik **"UPDATE"**
+4. Klik **"SAVE AND CONTINUE"**
+
+#### Test Users (Langkah 3):
+1. Klik **"ADD USERS"**
+2. Masukkan email Anda untuk testing
+3. Klik **"ADD"**
+4. Klik **"SAVE AND CONTINUE"**
+
+5. Review dan klik **"BACK TO DASHBOARD"**
+
+---
+
+### STEP 5: Buat OAuth 2.0 Credentials
+
+1. Di sidebar kiri, klik **"APIs & Services"** → **"Credentials"**
+2. Klik tombol **"+ CREATE CREDENTIALS"** di atas
+3. Pilih **"OAuth client ID"**
+
+#### Isi Form Create OAuth Client ID:
+
+**Application type:**
+- Pilih **"Web application"**
+
+**Name:**
+- Isi: `Dapoer Budess Web Client`
+
+**Authorized JavaScript origins:**
+- Klik **"+ ADD URI"**
+- Masukkan: `http://127.0.0.1:8000`
+- Klik **"+ ADD URI"** lagi
+- Masukkan: `http://localhost:8000`
+
+**Authorized redirect URIs:**
+- Klik **"+ ADD URI"**
+- Masukkan: `http://127.0.0.1:8000/auth/google/callback`
+- Klik **"+ ADD URI"** lagi
+- Masukkan: `http://localhost:8000/auth/google/callback`
+
+4. Klik **"CREATE"**
+
+---
+
+### STEP 6: Copy Client ID & Client Secret
+
+Setelah klik CREATE, akan muncul popup dengan:
+
+```
+OAuth client created
+
+Your Client ID
+xxxxxxxxxxxx-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.apps.googleusercontent.com
+
+Your Client Secret
+GOCSPX-xxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ```
 
-**Contoh:**
+**PENTING:** Copy kedua nilai ini!
+
+---
+
+### STEP 7: Masukkan ke File .env
+
+1. Buka file `.env` di project Laravel Anda
+2. Cari baris berikut:
+
 ```env
-GOOGLE_CLIENT_ID=123456789-abcdefghijklmnop.apps.googleusercontent.com
-GOOGLE_CLIENT_SECRET=GOCSPX-AbCdEfGhIjKlMnOpQrStUvWx
-GOOGLE_REDIRECT_URI=http://localhost:8000/auth/google/callback
+GOOGLE_CLIENT_ID=masukkan_client_id_disini
+GOOGLE_CLIENT_SECRET=masukkan_client_secret_disini
 ```
 
-### Step 5: Clear Cache & Test
+3. Ganti dengan nilai yang Anda copy:
+
+```env
+GOOGLE_CLIENT_ID=xxxxxxxxxxxx-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.apps.googleusercontent.com
+GOOGLE_CLIENT_SECRET=GOCSPX-xxxxxxxxxxxxxxxxxxxxxxxxxxxx
+GOOGLE_REDIRECT_URI=http://127.0.0.1:8000/auth/google/callback
+```
+
+4. **SAVE** file `.env`
+
+---
+
+### STEP 8: Restart Laravel Server
 
 ```bash
-php artisan config:clear
-php artisan cache:clear
+# Stop server (Ctrl + C)
+# Start server lagi
+php artisan serve
 ```
 
-Sekarang tombol "Masuk dengan Google" akan muncul di halaman login!
+---
+
+## ✅ Testing Login Google
+
+1. Buka browser: `http://127.0.0.1:8000/login`
+2. Klik tombol **"Masuk dengan Google"**
+3. Pilih akun Google Anda
+4. Klik **"Allow"** untuk memberikan akses
+5. Anda akan diarahkan kembali ke website dan otomatis login
 
 ---
 
-## 🧪 Testing
-
-1. **Buka halaman login:**
-   ```
-   http://localhost:8000/customer/login
-   ```
-
-2. **Klik "Masuk dengan Google"**
-
-3. **Pilih akun Google**
-
-4. **Berhasil!** Anda akan diarahkan ke homepage dan sudah login
-
----
-
-## 🔒 Security Notes
-
-### Development:
-- ✅ Gunakan `http://localhost:8000` untuk testing
-- ✅ Client Secret aman di `.env` (tidak di-commit ke Git)
-
-### Production:
-- ⚠️ Ganti `APP_URL` ke domain production
-- ⚠️ Update redirect URI di Google Console
-- ⚠️ Gunakan HTTPS (wajib untuk production)
-- ⚠️ Jangan commit `.env` ke Git
-
----
-
-## 🐛 Troubleshooting
+## 🔧 Troubleshooting
 
 ### Error: "redirect_uri_mismatch"
+
+**Penyebab:** URL redirect tidak sesuai dengan yang didaftarkan di Google Console
+
 **Solusi:**
-- Pastikan redirect URI di Google Console sama persis dengan di `.env`
-- Cek tidak ada trailing slash (`/`)
-- Cek http vs https
+1. Cek file `.env`, pastikan `GOOGLE_REDIRECT_URI` sama persis dengan yang di Google Console
+2. Pastikan tidak ada typo atau spasi
+3. Pastikan menggunakan `http://127.0.0.1:8000` bukan `http://localhost:8000` (atau sebaliknya)
 
-### Error: "invalid_client"
+### Error: "Access blocked: This app's request is invalid"
+
+**Penyebab:** OAuth Consent Screen belum dikonfigurasi dengan benar
+
 **Solusi:**
-- Cek Client ID dan Client Secret sudah benar
-- Clear cache: `php artisan config:clear`
+1. Kembali ke Google Cloud Console
+2. Pergi ke **OAuth consent screen**
+3. Pastikan semua field wajib sudah diisi
+4. Tambahkan email Anda sebagai Test User
 
-### Error: "access_denied"
+### Error: "The OAuth client was not found"
+
+**Penyebab:** Client ID salah atau belum dibuat
+
 **Solusi:**
-- User membatalkan login
-- Atau app belum di-approve (untuk production)
-
-### Tombol Google tidak muncul
-**Solusi:**
-- Pastikan `GOOGLE_CLIENT_ID` sudah ada di `.env`
-- Clear cache: `php artisan config:clear`
-- Refresh browser
+1. Cek kembali Client ID di Google Cloud Console
+2. Copy ulang dan paste ke `.env`
+3. Restart Laravel server
 
 ---
 
-## 📱 Cara Kerja
+## 📸 Screenshot Referensi
 
-1. User klik "Masuk dengan Google"
-2. Redirect ke Google OAuth
-3. User pilih akun Google
-4. Google redirect kembali ke `/auth/google/callback`
-5. System buat/update customer di database
-6. Auto login
-7. Redirect ke homepage
+### 1. Google Cloud Console - Dashboard
+```
+┌─────────────────────────────────────────┐
+│  Google Cloud Console                   │
+│  ┌─────────────────────────────────┐   │
+│  │ Select a project ▼              │   │
+│  └─────────────────────────────────┘   │
+│                                         │
+│  APIs & Services                        │
+│  ├─ Dashboard                           │
+│  ├─ Library                             │
+│  ├─ Credentials  ← KLIK INI             │
+│  └─ OAuth consent screen                │
+└─────────────────────────────────────────┘
+```
 
----
+### 2. Create Credentials
+```
+┌─────────────────────────────────────────┐
+│  + CREATE CREDENTIALS                   │
+│  ┌─────────────────────────────────┐   │
+│  │ API key                         │   │
+│  │ OAuth client ID  ← PILIH INI    │   │
+│  │ Service account key             │   │
+│  └─────────────────────────────────┘   │
+└─────────────────────────────────────────┘
+```
 
-## 💾 Data yang Disimpan
-
-Dari Google, kita ambil:
-- ✅ Name (nama lengkap)
-- ✅ Email
-- ✅ Avatar (foto profil)
-- ✅ Google ID (untuk link account)
-
-Data ini disimpan di tabel `customers`.
-
----
-
-## 🎯 Benefits
-
-**Untuk User:**
-- ✅ Login cepat tanpa password
-- ✅ Tidak perlu ingat password
-- ✅ Foto profil otomatis
-- ✅ Email terverifikasi
-
-**Untuk Business:**
-- ✅ Reduce friction saat register
-- ✅ Email valid (dari Google)
-- ✅ Increase conversion rate
-- ✅ Better user experience
-
----
-
-## 🔄 Update untuk Production
-
-Saat deploy ke production:
-
-1. **Update Google Console:**
-   - Tambah production redirect URI
-   - Contoh: `https://tokoroti.com/auth/google/callback`
-
-2. **Update .env production:**
-   ```env
-   APP_URL=https://tokoroti.com
-   GOOGLE_REDIRECT_URI=https://tokoroti.com/auth/google/callback
-   ```
-
-3. **Publish App (Optional):**
-   - Untuk production, publish OAuth consent screen
-   - Atau tetap "Testing" (max 100 users)
+### 3. OAuth Client ID Form
+```
+┌─────────────────────────────────────────┐
+│  Application type                       │
+│  ○ Web application  ← PILIH INI         │
+│  ○ Android                              │
+│  ○ iOS                                  │
+│                                         │
+│  Name                                   │
+│  [Dapoer Budess Web Client]            │
+│                                         │
+│  Authorized JavaScript origins          │
+│  [http://127.0.0.1:8000]               │
+│  + ADD URI                              │
+│                                         │
+│  Authorized redirect URIs               │
+│  [http://127.0.0.1:8000/auth/google/callback] │
+│  + ADD URI                              │
+│                                         │
+│  [CREATE]                               │
+└─────────────────────────────────────────┘
+```
 
 ---
 
-## 📚 Related Files
+## 🎯 Checklist Setup
 
-- `app/Http/Controllers/Auth/GoogleController.php` - OAuth logic
-- `config/services.php` - Google config
-- `routes/web.php` - OAuth routes
-- `resources/views/auth/customer/login.blade.php` - Login page
-- `resources/views/auth/customer/register.blade.php` - Register page
-
----
-
-## ✅ Checklist
-
-Setup Google OAuth:
-- [ ] Buat project di Google Cloud Console
-- [ ] Enable Google+ API
-- [ ] Configure OAuth consent screen
-- [ ] Create OAuth client ID
-- [ ] Copy Client ID & Secret
-- [ ] Update `.env` file
-- [ ] Clear cache
-- [ ] Test login dengan Google
-- [ ] Verify data tersimpan di database
+- [ ] Buka Google Cloud Console
+- [ ] Buat/pilih project
+- [ ] Aktifkan Google+ API atau Google Identity
+- [ ] Buat OAuth Consent Screen
+- [ ] Tambahkan Test Users
+- [ ] Buat OAuth Client ID (Web application)
+- [ ] Tambahkan Authorized JavaScript origins
+- [ ] Tambahkan Authorized redirect URIs
+- [ ] Copy Client ID
+- [ ] Copy Client Secret
+- [ ] Paste ke file `.env`
+- [ ] Restart Laravel server
+- [ ] Test login Google
 
 ---
 
-**Status Saat Ini:** Tombol Google disembunyikan (belum ada credentials)  
-**Untuk Aktifkan:** Ikuti step di atas dan tambahkan credentials ke `.env`
+## 📝 Catatan Penting
 
-**Last Updated:** 3 Mei 2026
+1. **Untuk Development (Local):**
+   - Gunakan `http://127.0.0.1:8000` atau `http://localhost:8000`
+   - Tambahkan email Anda sebagai Test User
 
+2. **Untuk Production (Live Server):**
+   - Ganti URL dengan domain asli: `https://dapoerbudess.com`
+   - Update Authorized JavaScript origins dan redirect URIs
+   - Publish OAuth Consent Screen (tidak perlu Test Users lagi)
+
+3. **Keamanan:**
+   - **JANGAN** commit file `.env` ke Git
+   - **JANGAN** share Client Secret ke publik
+   - Simpan Client ID & Secret dengan aman
+
+---
+
+## 🚀 Next Steps
+
+Setelah setup selesai:
+
+1. ✅ Login Google sudah berfungsi
+2. ✅ User otomatis terdaftar di database
+3. ✅ User otomatis login setelah authorize
+4. ✅ Data user (nama, email, avatar) tersimpan
+
+---
+
+**Dibuat pada:** 8 Mei 2026  
+**Untuk:** Dapoer Budess - Roti Rumahan  
+**Status:** ✅ Ready to Use

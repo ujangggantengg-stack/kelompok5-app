@@ -245,19 +245,45 @@
 
         .cart-count {
             position: absolute;
-            top: -8px;
-            right: -8px;
-            background: #FF4444;
+            top: -10px;
+            right: -10px;
+            background: #FF0000;
             color: white;
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
+            min-width: 22px;
+            height: 22px;
+            padding: 0 6px;
+            border-radius: 11px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 0.75rem;
-            font-weight: bold;
+            font-weight: 800;
+            border: 2px solid #FFFFFF;
+            box-shadow: 0 4px 10px rgba(255, 0, 0, 0.4);
+            z-index: 100;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             pointer-events: none;
+        }
+
+        .cart-btn:hover .cart-count {
+            transform: scale(1.2);
+            box-shadow: 0 6px 15px rgba(255, 0, 0, 0.5);
+        }
+
+        @keyframes badgePulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.3); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes pulse-red-badge {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255, 0, 0, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(255, 0, 0, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255, 0, 0, 0); }
+        }
+
+        .badge-updated {
+            animation: badgePulse 0.4s ease-out;
         }
 
         .product-image {
@@ -401,10 +427,10 @@
             display: inline-block;
             background: linear-gradient(135deg, #d39e00 0%, #b8860b 100%);
             color: white;
-            padding: 1rem 2.5rem;
+            padding: 0.8rem 2rem;
             border-radius: 50px;
             font-weight: 600;
-            font-size: 1rem;
+            font-size: 0.9rem;
             text-transform: uppercase;
             letter-spacing: 0.5px;
             text-decoration: none;
@@ -547,7 +573,7 @@
                 linear-gradient(135deg, rgba(255, 255, 255, 0.4) 0%, transparent 50%),
                 linear-gradient(225deg, rgba(232, 130, 26, 0.08) 0%, transparent 60%),
                 linear-gradient(135deg, rgba(245, 230, 200, 0.95) 0%, rgba(240, 221, 184, 0.95) 50%, rgba(232, 213, 176, 0.95) 100%),
-                url('https://images.unsplash.com/photo-1589569444360-61ed59c6e2be?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D') !important;
+                url('{{ str_starts_with($promo->background_image, "http") ? $promo->background_image : asset($promo->background_image ?? "https://images.unsplash.com/photo-1589569444360-61ed59c6e2be?q=80&w=1170&auto=format&fit=crop") }}') !important;
             background-size: cover, cover, cover, cover;
             background-position: center, center, center, center;
             background-blend-mode: normal, normal, normal, multiply;
@@ -842,21 +868,21 @@
 
         .promo-cta {
             width: 100%;
-            padding: 16px 28px;
+            padding: 8px 16px;
             background: linear-gradient(135deg, #E07B00 0%, #F5A623 100%);
             color: white;
-            font-size: 15px;
+            font-size: 12px;
             font-weight: 700;
             text-transform: uppercase;
             border: none;
-            border-radius: 50px;
+            border-radius: 12px;
             cursor: pointer;
             box-shadow: 
-                0 8px 20px rgba(232, 130, 26, 0.4),
+                0 4px 12px rgba(232, 130, 26, 0.3),
                 inset 0 1px 0 rgba(255, 255, 255, 0.3);
             transition: all 0.3s ease;
             letter-spacing: 0.5px;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
             position: relative;
             overflow: hidden;
         }
@@ -1043,7 +1069,13 @@
                 width: 100% !important;
                 border-radius: 40px !important; 
                 padding: 40px 22px !important;
-                background: #FFF9F0 !important;
+                background-color: #FFF9F0 !important;
+                background-image: 
+                    linear-gradient(135deg, rgba(255, 255, 255, 0.4) 0%, transparent 50%),
+                    linear-gradient(225deg, rgba(232, 130, 26, 0.08) 0%, transparent 60%),
+                    linear-gradient(135deg, rgba(245, 230, 200, 0.95) 0%, rgba(240, 221, 184, 0.95) 50%, rgba(232, 213, 176, 0.95) 100%),
+                    url('{{ str_starts_with($promo->background_image, "http") ? $promo->background_image : asset($promo->background_image ?? "https://images.unsplash.com/photo-1589569444360-61ed59c6e2be?q=80&w=1170&auto=format&fit=crop") }}') !important;
+                background-size: cover !important;
                 border: 1.5px solid rgba(212, 175, 55, 0.3) !important;
                 box-shadow: 0 20px 60px rgba(139, 69, 19, 0.1) !important;
                 position: relative !important;
@@ -1558,6 +1590,7 @@
             display: flex;
             flex-direction: column;
             border: 3px solid #D4AF37;
+            height: 100%;
         }
 
         .product-card:hover {
@@ -1593,6 +1626,8 @@
             padding-top: 75%;
             overflow: hidden;
             background: #f8f9fa;
+            border-radius: 17px 17px 0 0;
+            flex-shrink: 0;
         }
 
         .quick-add-btn {
@@ -1675,7 +1710,7 @@
             padding: 1.5rem;
             display: flex;
             flex-direction: column;
-            flex-grow: 1;
+            flex: 1;
             position: relative;
         }
 
@@ -1700,15 +1735,16 @@
             line-height: 1.4;
         }
 
-        .product-description {
+        .product-description, .product-description-short {
             font-size: 0.9rem;
             color: #666;
             margin-bottom: 1rem;
-            line-height: 1.6;
+            line-height: 1.5;
             display: -webkit-box;
             -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
             overflow: hidden;
+            min-height: 2.7em; /* Konsisten 2 baris */
         }
         
         .stock-badge {
@@ -1719,16 +1755,16 @@
             padding: 0.25rem 0.75rem;
             border-radius: 4px;
             font-weight: 600;
-            margin-bottom: 1rem;
+            margin-bottom: 0.75rem;
             width: fit-content;
         }
 
         .price-container {
-            margin-top: auto;
             display: flex;
             align-items: baseline;
             gap: 0.75rem;
-            margin-bottom: 1.25rem;
+            margin-bottom: 0.5rem;
+            flex-wrap: wrap;
         }
 
         .price-old { font-size: 0.9rem; color: #999; text-decoration: line-through; }
@@ -1737,15 +1773,15 @@
 
         .cta-button {
             width: 100%;
-            padding: 0.65rem 1rem; /* Smaller padding */
-            height: 42px; /* Fixed smaller height */
+            padding: 0.4rem 1rem;
+            height: 38px;
             border: none;
-            border-radius: 10px; /* Slightly smaller radius */
+            border-radius: 10px;
             background: var(--primary);
             color: white;
             font-family: 'Outfit', sans-serif;
             font-weight: 600;
-            font-size: 0.875rem; /* Smaller font size */
+            font-size: 0.85rem;
             cursor: pointer;
             transition: all 0.3s ease;
             display: flex;
@@ -1755,6 +1791,7 @@
             position: relative;
             z-index: 3;
             line-height: 1;
+            flex-shrink: 0;
         }
 
         .cta-button:hover {
@@ -2703,25 +2740,25 @@
             filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.5));
         }
 
-        /* ========== PROMO MODAL ========== */
+        /* ========== PROMO MODAL v2 JAVANESE ARTISAN ========== */
         .promo-modal-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.75);
+            background: rgba(0, 0, 0, 0.85);
             display: none;
             justify-content: center;
             align-items: center;
             z-index: 20000;
-            backdrop-filter: blur(5px);
+            backdrop-filter: blur(10px);
             padding: 20px;
         }
 
         .promo-modal-overlay.active {
             display: flex;
-            animation: fadeInModal 0.3s ease forwards;
+            animation: fadeInModal 0.4s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
         }
 
         @keyframes fadeInModal {
@@ -2730,238 +2767,282 @@
         }
 
         .promo-modal {
-            background: #FFFDF9;
+            background: #F5EDD8 !important;
             width: 100%;
-            max-width: 1000px;
+            max-width: 1200px;
             max-height: 90vh;
-            border-radius: 24px;
+            border-radius: 40px;
             position: relative;
-            padding: 40px 30px;
-            overflow-y: auto;
-            box-shadow: 0 25px 50px rgba(0,0,0,0.3);
-            border: 1px solid rgba(212, 175, 55, 0.3);
-            transform: translateY(20px);
-            transition: transform 0.3s ease;
+            padding: 0 !important;
+            overflow: hidden;
+            box-shadow: 0 35px 60px -15px rgba(0,0,0,0.6);
+            border: none !important;
+            transform: translateY(30px) scale(0.98);
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: flex;
+            flex-direction: column;
         }
 
         .promo-modal-overlay.active .promo-modal {
-            transform: translateY(0);
+            transform: translateY(0) scale(1);
+        }
+
+        /* Batik Overlay inside modal */
+        .promo-modal::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            opacity: 0.08;
+            pointer-events: none;
+            z-index: 0;
+            background-image: url("data:image/svg+xml,%3Csvg width='150' height='150' viewBox='0 0 150 150' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M75 0 L150 75 L75 150 L0 75 Z' fill='none' stroke='%233B1F0A' stroke-width='1.5'/%3E%3Ccircle cx='75' cy='75' r='20' fill='none' stroke='%233B1F0A' stroke-width='1'/%3E%3Cpath d='M0 0 L150 150 M150 0 L0 150' stroke='%233B1F0A' stroke-width='0.5'/%3E%3C/svg%3E");
+            background-repeat: repeat;
         }
 
         .promo-modal-close {
             position: absolute;
-            top: 20px;
-            right: 20px;
-            width: 40px;
-            height: 40px;
-            background: #f5f5f5;
+            top: 24px;
+            right: 24px;
+            width: 48px;
+            height: 48px;
+            background: white;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            font-size: 1.2rem;
-            color: #333;
+            font-size: 1.5rem;
+            color: #9ca3af;
             transition: all 0.3s ease;
-            z-index: 10;
+            z-index: 100;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            border: none;
         }
 
         .promo-modal-close:hover {
-            background: #ea580c;
-            color: white;
-            transform: rotate(90deg);
+            background: #f3f4f6;
+            color: #3B1F0A;
+            transform: rotate(90deg) scale(1.1);
+        }
+
+        .promo-modal-scrollable {
+            overflow-y: auto;
+            flex-grow: 1;
+            z-index: 10;
+            padding: 40px 30px;
+            position: relative;
         }
 
         .promo-modal-title {
             font-family: 'Playfair Display', serif;
-            font-size: 2.2rem;
-            color: #4a2c0a;
+            font-size: 2.8rem;
+            color: #3B1F0A;
             text-align: center;
             margin-bottom: 35px;
-            font-weight: 700;
+            font-weight: 800;
+            text-shadow: none;
         }
 
         .promo-products-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 25px;
+            gap: 30px;
+            padding: 10px;
         }
 
         .promo-product-card {
-            background: white;
-            border-radius: 16px;
+            background: white !important;
+            border-radius: 24px;
             overflow: hidden;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-            border: 1px solid rgba(212, 175, 55, 0.2);
+            box-shadow: 0 10px 25px rgba(59, 31, 10, 0.08);
+            border: 1px solid rgba(59, 31, 10, 0.05);
             display: flex;
             flex-direction: column;
-            transition: transform 0.3s ease;
+            transition: all 0.4s ease;
+            position: relative;
         }
 
         .promo-product-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(59, 31, 10, 0.15);
         }
 
         .promo-product-img-wrapper {
             position: relative;
             width: 100%;
-            aspect-ratio: 1/1;
-        }
-
-        .promo-quick-add {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            width: 38px;
-            height: 38px;
-            background: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
-            cursor: pointer;
-            z-index: 10;
-            transition: all 0.3s ease;
-            font-size: 1.1rem;
-            border: 1px solid rgba(212, 175, 55, 0.2);
-        }
-
-        .promo-quick-add:hover {
-            background: #4a2c0a;
-            color: white;
-            transform: scale(1.1);
-            box-shadow: 0 6px 20px rgba(74, 44, 10, 0.3);
+            aspect-ratio: 4/3;
+            overflow: hidden;
         }
 
         .promo-product-img {
             width: 100%;
             height: 100%;
             object-fit: cover;
+            transition: transform 0.6s ease;
+        }
+
+        .promo-product-card:hover .promo-product-img {
+            transform: scale(1.1);
         }
 
         .promo-product-badge {
             position: absolute;
-            top: 10px;
-            left: 10px;
-            background: #ef4444;
-            color: white;
-            padding: 4px 10px;
-            border-radius: 4px;
+            top: 15px;
+            left: 15px;
+            background: #E53E3E !important;
+            color: white !important;
+            padding: 6px 14px;
+            border-radius: 8px;
             font-size: 0.75rem;
-            font-weight: 700;
-            z-index: 2;
+            font-weight: 800;
+            text-transform: uppercase;
+            box-shadow: 0 4px 10px rgba(229, 62, 62, 0.3);
+            z-index: 20;
+        }
+
+        .promo-quick-add {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            width: 42px;
+            height: 42px;
+            background: white !important;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+            cursor: pointer;
+            z-index: 20;
+            transition: all 0.3s ease;
+            font-size: 1.1rem;
+            color: #3B1F0A;
+            border: none;
+        }
+
+        .promo-quick-add:hover {
+            background: #3B1F0A !important;
+            color: white !important;
+            transform: scale(1.1);
         }
 
         .promo-product-body {
-            padding: 20px;
+            padding: 24px;
             flex: 1;
             display: flex;
             flex-direction: column;
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M50 0 L100 50 L50 100 L0 50 Z' fill='none' stroke='%233B1F0A' stroke-opacity='0.02' stroke-width='1'/%3E%3C/svg%3E");
+            background-position: bottom right;
+            background-repeat: no-repeat;
         }
 
         .promo-product-subtitle {
             font-size: 0.7rem;
             text-transform: uppercase;
-            letter-spacing: 1px;
-            color: #8b5a2b;
-            margin-bottom: 5px;
-            font-weight: 600;
+            letter-spacing: 1.2px;
+            color: #A0522D;
+            margin-bottom: 8px;
+            font-weight: 700;
             display: block;
-            min-height: 2rem; /* Increased for long subtitles */
+            min-height: auto;
+            font-family: 'Outfit', sans-serif;
         }
 
         .promo-product-name {
             font-family: 'Playfair Display', serif;
-            font-size: 1.25rem;
-            color: #4a2c0a;
-            font-weight: 700;
+            font-size: 1.5rem;
+            color: #3B1F0A;
+            font-weight: 800;
             margin-bottom: 12px;
-            line-height: 1.3;
-            min-height: 3.25rem; /* Ensure consistent height for 2 lines */
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
+            line-height: 1.2;
+            min-height: auto;
+            display: block;
+            overflow: visible;
         }
 
         .promo-product-pricing {
-            margin-bottom: 15px;
+            margin-bottom: 12px;
             display: flex;
             align-items: center;
-            gap: 8px;
-            min-height: 1.5rem;
+            gap: 10px;
+            min-height: auto;
         }
 
         .promo-price-original {
             text-decoration: line-through;
-            color: #999;
-            font-size: 0.9rem;
+            color: #9ca3af;
+            font-size: 0.95rem;
+            font-family: 'Outfit', sans-serif;
         }
 
         .promo-price-current {
-            color: #ea580c;
-            font-size: 1.3rem;
+            color: #D9480F;
+            font-size: 1.5rem;
             font-weight: 800;
+            font-family: 'Outfit', sans-serif;
         }
 
         .promo-stock-status {
-            background: #d1fae5;
-            color: #065f46;
-            padding: 6px 12px;
+            background: #C6F6D5 !important;
+            color: #22543D !important;
+            padding: 5px 14px;
             border-radius: 50px;
             font-size: 0.75rem;
-            font-weight: 600;
-            margin-bottom: 15px;
+            font-weight: 700;
+            margin-bottom: 10px;
             display: inline-block;
             align-self: flex-start;
-            min-height: 27px; /* Consistent height */
+            min-height: auto;
+            font-family: 'Outfit', sans-serif;
         }
 
         .promo-label-bottom {
             font-size: 0.8rem;
-            color: #666;
-            margin-bottom: 15px;
-            min-height: 2.5rem; /* Ensure consistent height for 2 lines */
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
+            color: #4b5563;
+            margin-bottom: 20px;
+            min-height: auto;
+            display: block;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 500;
         }
 
         .promo-buy-btn {
-            background: #4a2c0a;
-            color: white;
+            background: #3B1F0A !important;
+            color: white !important;
             border: none;
-            padding: 12px;
-            border-radius: 8px;
+            padding: 14px;
+            border-radius: 12px;
             font-weight: 700;
             cursor: pointer;
             width: 100%;
             transition: all 0.3s ease;
             font-family: 'Outfit', sans-serif;
             margin-top: auto;
+            font-size: 1rem;
         }
 
         .promo-buy-btn:hover {
-            background: #2c1806;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 10px rgba(74, 44, 10, 0.3);
+            background: #261406 !important;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(59, 31, 10, 0.4);
         }
 
         @media (max-width: 768px) {
             .promo-products-grid {
                 grid-template-columns: 1fr;
-                gap: 20px;
-                overflow-x: hidden;
+                gap: 25px;
             }
             .promo-modal {
-                padding: 30px 20px;
+                padding: 0;
                 width: 95%;
+                border-radius: 30px;
             }
             .promo-modal-title {
-                font-size: 1.6rem;
+                font-size: 1.8rem;
+                margin-bottom: 25px;
+            }
+            .promo-modal-scrollable {
+                padding: 30px 20px;
             }
         }
         
@@ -3215,9 +3296,9 @@
             .product-description { font-size: 0.85rem; }
             .price-new { font-size: 1.1rem; }
             .cta-button { 
-                padding: 0.6rem 0.875rem; 
-                font-size: 0.85rem; 
-                height: 40px; /* Consistent smaller height on mobile */
+                padding: 0.5rem 0.875rem; 
+                font-size: 0.8rem; 
+                height: 36px; /* Consistent smaller height on mobile */
             }
         }
 
@@ -3323,8 +3404,8 @@
             <button class="message-btn" onclick="openMessageModal()" style="position: relative;">
                 <span class="btn-icon">💬</span>
                 <span class="btn-text">Pesan</span>
-                <span class="cart-count" id="msgBadge" style="display: none; position: absolute; top: -8px; right: -8px; background: #ff4444; color: white; font-size: 0.7rem; font-weight: 700; min-width: 20px; height: 20px; border-radius: 10px; display: flex; align-items: center; justify-content: center; border: 2px solid white; box-shadow: 0 2px 8px rgba(255,68,68,0.4);">0</span>
-                <span id="msgPulse" style="display: none; position: absolute; top: -5px; right: -5px; width: 12px; height: 12px; background: #ff4444; border-radius: 50%; border: 2px solid #fff; box-shadow: 0 0 0 rgba(255, 68, 68, 0.4); animation: pulse-red 2s infinite;"></span>
+                <span class="cart-count" id="msgBadge" style="display: none;">0</span>
+                <span id="msgPulse" style="display: none; position: absolute; top: -10px; right: -10px; width: 22px; height: 22px; background: rgba(255, 0, 0, 0.4); border-radius: 50%; z-index: 99; animation: pulse-red-badge 2s infinite;"></span>
             </button>
             
             @auth('customer')
@@ -3397,18 +3478,16 @@
                 </div>
             @else
                 <!-- Login/Register Buttons (Guest) -->
-                <a href="{{ route('customer.login') }}" class="login-btn" style="background: transparent; border: 2px solid var(--cream); color: var(--cream); padding: 0.5rem 1.25rem; border-radius: 8px; text-decoration: none; font-weight: 500; transition: all 0.3s ease; font-family: 'Outfit', sans-serif; display: inline-flex; align-items: center; gap: 0.5rem;" title="Masuk">
-                    <span style="font-size: 1.2rem;">🔐</span>
+                <a href="{{ route('customer.login') }}" class="login-btn" style="background: transparent; border: 1.5px solid var(--cream); color: var(--cream); padding: 0.4rem 1rem; height: 34px; border-radius: 10px; text-decoration: none; font-weight: 500; transition: all 0.3s ease; font-family: 'Outfit', sans-serif; display: inline-flex; align-items: center; gap: 0.4rem; font-size: 0.85rem;" title="Masuk">
+                    <span style="font-size: 1rem;">🔐</span>
                     <span class="btn-text">Masuk</span>
                 </a>
-                <a href="{{ route('customer.register') }}" class="register-btn" style="background: linear-gradient(135deg, var(--accent), var(--secondary)); color: white; padding: 0.5rem 1.25rem; border-radius: 8px; text-decoration: none; font-weight: 600; transition: all 0.3s ease; font-family: 'Outfit', sans-serif; box-shadow: 0 4px 12px rgba(244, 164, 96, 0.3); display: inline-flex; align-items: center; gap: 0.5rem;" title="Daftar">
-                    <span style="font-size: 1.2rem;">✨</span>
+                <a href="{{ route('customer.register') }}" class="register-btn" style="background: linear-gradient(135deg, var(--accent), var(--secondary)); color: white; padding: 0.4rem 1rem; height: 34px; border-radius: 10px; text-decoration: none; font-weight: 600; transition: all 0.3s ease; font-family: 'Outfit', sans-serif; box-shadow: 0 4px 12px rgba(244, 164, 96, 0.3); display: inline-flex; align-items: center; gap: 0.4rem; font-size: 0.85rem;" title="Daftar">
+                    <span style="font-size: 1rem;">✨</span>
                     <span class="btn-text">Daftar</span>
                 </a>
             @endauth
             
-            @auth
-             @endif
             <button class="menu-toggle" onclick="toggleMenu()">☰</button>
         </div>
 
@@ -3457,7 +3536,8 @@
     </div>
 
     <!-- PROMO Section -->
-    @if(isset($promo) && $promo->is_active)
+    <!-- PROMO Section - ALWAYS SHOW -->
+    @if($promo)
     <section class="promo-section" id="promoBanner">
         <div class="promo-card">
             <div class="promo-content">
@@ -3494,8 +3574,8 @@
                     </div>
 
                     <!-- Countdown Timer -->
-                    @if($promo->end_time && $promo->end_time->isFuture())
-                    <div id="promo-countdown" class="promo-countdown" data-endtime="{{ $promo->end_time->format('Y-m-d H:i:s') }}">
+                    @if($promo->end_time)
+                    <div class="promo-countdown" id="promo-countdown" data-endtime="{{ $promo->end_time->format('Y-m-d H:i:s') }}">
                         <div class="timer-item">
                             <span id="timer-days">00</span>
                             <small>Hari</small>
@@ -3537,9 +3617,9 @@
                     <!-- CTA Button -->
                     <div class="promo-cta-container">
                         <button class="promo-cta" onclick="openPromoModal()">
-                            🛒 PESAN SEKARANG – TERBATAS!
+                            🛒 PESAN SEKARANG – STOK TERBATAS!
                         </button>
-                        <p class="promo-note">⏰ Promo hanya hari ini!</p>
+                        <p class="promo-note">⏰ Promo terbatas!</p>
                     </div>
                 </div>
 
@@ -3557,19 +3637,19 @@
 
                     <!-- Product Images -->
                     <div class="promo-images">
-                        <!-- GAMBAR 1 - UTAMA (BESAR, ATAS KANAN) -->
+                        <!-- GAMBAR 1 - UTAMA -->
                         <div class="promo-image-item promo-image-main">
-                            <img src="{{ $promo->image_main ? '/' . $promo->image_main : '/images/besar1.jpg' }}" alt="{{ $promo->title }}" onerror="this.src='https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=400&q=80'">
+                            <img src="{{ asset($promo->image_main ?? 'images/besar1.jpg') }}" alt="{{ $promo->title }}" onerror="this.src='https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=400&q=80'">
                         </div>
 
-                        <!-- GAMBAR 2 - KECIL (BAWAH KIRI) -->
+                        <!-- GAMBAR 2 -->
                         <div class="promo-image-item promo-image-second">
-                            <img src="{{ $promo->image_second ? '/' . $promo->image_second : '/images/besar 2.jpg' }}" alt="{{ $promo->title }}" onerror="this.src='https://images.unsplash.com/photo-1509440159596-0249088772ff?w=400&q=80'">
+                            <img src="{{ asset($promo->image_second ?? 'images/besar 2.jpg') }}" alt="{{ $promo->title }}" onerror="this.src='https://images.unsplash.com/photo-1509440159596-0249088772ff?w=400&q=80'">
                         </div>
 
-                        <!-- GAMBAR 3 - SEDANG (BAWAH KANAN) -->
+                        <!-- GAMBAR 3 -->
                         <div class="promo-image-item promo-image-third">
-                            <img src="{{ $promo->image_third ? '/' . $promo->image_third : '/images/besar 3.jpg' }}" alt="{{ $promo->title }}" onerror="this.src='https://images.unsplash.com/photo-1555507036-ab1f4038808a?w=400&q=80'">
+                            <img src="{{ asset($promo->image_third ?? 'images/besar 3.jpg') }}" alt="{{ $promo->title }}" onerror="this.src='https://images.unsplash.com/photo-1555507036-ab1f4038808a?w=400&q=80'">
                         </div>
                     </div>
                 </div>
@@ -3582,49 +3662,53 @@
     <div id="promoModalOverlay" class="promo-modal-overlay" onclick="closePromoModal(event)">
         <div class="promo-modal" onclick="event.stopPropagation()">
             <div class="promo-modal-close" onclick="closePromoModal(event)">✕</div>
-            <h2 class="promo-modal-title">🔥 Pilih Roti Promo Hari Ini</h2>
-            <div style="text-align: center; margin-bottom: 25px; margin-top: -20px; display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
-                <button onclick="toggleCart()" style="background: #fffcf0; border: 1px solid #D4AF37; padding: 8px 15px; border-radius: 20px; color: #4a2c0a; font-weight: 600; cursor: pointer; font-size: 0.9rem; display: inline-flex; align-items: center; gap: 8px; transition: all 0.3s;">
-                    🛒 Lihat Keranjang (<span id="promoModalCartCount">0</span>)
-                </button>
-                <button onclick="closePromoModal(event)" style="background: #4a2c0a; border: 1px solid #D4AF37; padding: 8px 15px; border-radius: 20px; color: #fffcf0; font-weight: 600; cursor: pointer; font-size: 0.9rem; display: inline-flex; align-items: center; gap: 8px; transition: all 0.3s;">
-                    ✓ Selesai Belanja
-                </button>
-            </div>
             
-            <div class="promo-products-grid">
-                @if(isset($modalProducts) && $modalProducts->count() > 0)
-                    @foreach($modalProducts as $p)
-                    <div class="promo-product-card">
-                        <div class="promo-product-img-wrapper">
-                            @if($p->badge)
-                                <span class="promo-product-badge">{{ $p->badge }}</span>
-                            @endif
-                            <div class="promo-quick-add" onclick="directBuyPromo('{{ $p->name }}', {{ (int)$p->price_promo }})" title="Tambah ke Keranjang">🛒</div>
-                            <img src="{{ $p->image ? '/' . $p->image : 'https://images.unsplash.com/photo-1509440159596-0249088772ff?w=500&h=500&fit=crop' }}" class="promo-product-img" alt="{{ $p->name }}">
-                        </div>
-                        <div class="promo-product-body">
-                            @if($p->subtitle)
-                                <span class="promo-product-subtitle">{{ $p->subtitle }}</span>
-                            @endif
-                            <h3 class="promo-product-name">{{ $p->name }}</h3>
-                            <div class="promo-product-pricing">
-                                @if($p->price_original && $p->price_original > $p->price_promo)
-                                    <span class="promo-price-original">Rp {{ number_format($p->price_original, 0, ',', '.') }}</span>
+            <div class="promo-modal-scrollable">
+                <h2 class="promo-modal-title">Pilih Roti Promo Hari Ini</h2>
+                
+                <div style="text-align: center; margin-bottom: 35px; margin-top: -20px; display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
+                    <button onclick="toggleCart()" style="background: white; border: 2px solid #D2B48C; padding: 10px 25px; border-radius: 50px; color: #3B1F0A; font-weight: 700; cursor: pointer; font-size: 0.95rem; display: inline-flex; align-items: center; gap: 10px; transition: all 0.3s; box-shadow: 0 4px 10px rgba(0,0,0,0.05); font-family: 'Outfit', sans-serif;">
+                        🛒 Lihat Keranjang (<span id="promoModalCartCount">0</span>)
+                    </button>
+                    <button onclick="closePromoModal(event)" style="background: #3B1F0A; border: none; padding: 10px 25px; border-radius: 50px; color: white; font-weight: 700; cursor: pointer; font-size: 0.95rem; display: inline-flex; align-items: center; gap: 10px; transition: all 0.3s; box-shadow: 0 4px 15px rgba(59, 31, 10, 0.4); font-family: 'Outfit', sans-serif;">
+                        ✓ Selesai Belanja
+                    </button>
+                </div>
+                
+                <div class="promo-products-grid">
+                    @if(isset($modalProducts) && $modalProducts->count() > 0)
+                        @foreach($modalProducts as $p)
+                        <div class="promo-product-card">
+                            <div class="promo-product-img-wrapper">
+                                @if($p->badge)
+                                    <span class="promo-product-badge">{{ $p->badge }}</span>
                                 @endif
-                                <span class="promo-price-current">Rp {{ number_format($p->price_promo, 0, ',', '.') }}</span>
+                                <div class="promo-quick-add" onclick="directBuyPromo('{{ $p->name }}', {{ (int)$p->price_promo }})" title="Tambah ke Keranjang">🛒</div>
+                                <img src="{{ $p->image ? '/' . $p->image : 'https://images.unsplash.com/photo-1509440159596-0249088772ff?w=500&h=500&fit=crop' }}" class="promo-product-img" alt="{{ $p->name }}">
                             </div>
-                            @if($p->stock_label)
-                                <span class="promo-stock-status">{{ $p->stock_label }}</span>
-                            @endif
-                            @if($p->bottom_label)
-                                <p class="promo-label-bottom">{{ $p->bottom_label }}</p>
-                            @endif
-                            <button class="promo-buy-btn" onclick="directBuyPromo('{{ $p->name }}', {{ (int)$p->price_promo }})">🛒 Tambah</button>
+                            <div class="promo-product-body">
+                                @if($p->subtitle)
+                                    <span class="promo-product-subtitle">{{ $p->subtitle }}</span>
+                                @endif
+                                <h3 class="promo-product-name">{{ $p->name }}</h3>
+                                <div class="promo-product-pricing">
+                                    @if($p->price_original && $p->price_original > $p->price_promo)
+                                        <span class="promo-price-original">Rp {{ number_format($p->price_original, 0, ',', '.') }}</span>
+                                    @endif
+                                    <span class="promo-price-current">Rp {{ number_format($p->price_promo, 0, ',', '.') }}</span>
+                                </div>
+                                @if($p->stock_label)
+                                    <span class="promo-stock-status">{{ $p->stock_label }}</span>
+                                @endif
+                                @if($p->bottom_label)
+                                    <p class="promo-label-bottom">{{ $p->bottom_label }}</p>
+                                @endif
+                                <button class="promo-buy-btn" onclick="directBuyPromo('{{ $p->name }}', {{ (int)$p->price_promo }})">🛒 Beli</button>
+                            </div>
                         </div>
-                    </div>
-                    @endforeach
-                @endif
+                        @endforeach
+                    @endif
+                </div>
             </div>
         </div>
     </div>
@@ -4351,21 +4435,22 @@
                     <div class="product-card" data-category="${product.category}" data-product-id="${product.id}">
                         ${badgeText ? `<div class="product-promo-badge">${badgeText}</div>` : ''}
                         <div class="product-image-wrapper">
-
                             <div class="product-image">
                                 ${product.image ? `<img src="${product.image}" alt="${name}" class="product-image" style="width:100%;height:100%;object-fit:cover;">` : `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:#ccc;font-size:3rem;">🍞</div>`}
                             </div>
                         </div>
                         <div class="product-info">
                             <h3 class="product-name">${name}</h3>
-                            <p class="product-description" style="display:none;">${description}</p>
                             <p class="product-description-short">${description}</p>
-                            ${stockStatus.label ? `<div style="margin:0.75rem 0;padding:0.5rem 0.75rem;background:${stockBgColors[stockStatus.color] || '#f3f4f6'};border-left:3px solid ${stockColors[stockStatus.color] || '#9ca3af'};border-radius:0.5rem;font-size:0.8rem;font-weight:600;color:${stockColors[stockStatus.color] || '#4b5563'};text-align:center;">${stockStatus.label}</div>` : ''}
-                            <div class="price-container">
-                                <span class="product-price">${product.is_discount_active ? `<span class="price-old">Rp ${(product.price || 0).toLocaleString('id-ID')}</span><span class="price-new">Rp ${(product.effective_price || 0).toLocaleString('id-ID')}</span>` : `<span class="price-new">Rp ${(product.price || 0).toLocaleString('id-ID')}</span>`}</span>
+                            ${stockStatus.label ? `<div style="margin:0.5rem 0;padding:0.4rem 0.75rem;background:${stockBgColors[stockStatus.color] || '#f3f4f6'};border-left:3px solid ${stockColors[stockStatus.color] || '#9ca3af'};border-radius:0.5rem;font-size:0.75rem;font-weight:600;color:${stockColors[stockStatus.color] || '#4b5563'};text-align:center;">${stockStatus.label}</div>` : ''}
+                            
+                            <div class="product-footer" style="margin-top:auto;">
+                                <div class="price-container">
+                                    <span class="product-price">${product.is_discount_active ? `<span class="price-old">Rp ${(product.price || 0).toLocaleString('id-ID')}</span><span class="price-new">Rp ${(product.effective_price || 0).toLocaleString('id-ID')}</span>` : `<span class="price-new">Rp ${(product.price || 0).toLocaleString('id-ID')}</span>`}</span>
+                                </div>
+                                <p style="font-size:0.75rem;color:#888;margin-bottom:0.75rem;font-style:italic;">${randomTagline}</p>
+                                <button class="cta-button add-to-cart-btn" onclick="addToCart(${product.id}, ${!!stockStatus.is_preorder})" ${buttonDisabled ? 'disabled' : ''}>${buttonText}</button>
                             </div>
-                            <p style="font-size:0.8rem;color:#888;margin-bottom:0.75rem;">${randomTagline}</p>
-                            <button class="cta-button add-to-cart-btn" onclick="addToCart(${product.id}, ${!!stockStatus.is_preorder})" ${buttonDisabled ? 'disabled' : ''}>${buttonText}</button>
                         </div>
                     </div>`;
             }).join('');
@@ -4456,6 +4541,8 @@
             
             updateCart();
             closePurchaseModal();
+            
+            // Langsung ke checkout (captcha akan muncul di goToCheckout)
             goToCheckout(true);
         }
 
@@ -4529,7 +4616,13 @@
             const cartItems = document.getElementById('cartItems');
             const cartSummary = document.getElementById('cartSummary');
             const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
-            cartCount.textContent = totalItems;
+            
+            if (cartCount.textContent != totalItems) {
+                cartCount.textContent = totalItems;
+                cartCount.classList.remove('badge-updated');
+                void cartCount.offsetWidth; // Trigger reflow
+                cartCount.classList.add('badge-updated');
+            }
             
             // Update cart count in promo modal if exists
             const promoCartCount = document.getElementById('promoModalCartCount');
@@ -4733,6 +4826,51 @@
         if (heroSlider) {
             heroSlider.addEventListener('mouseenter', stopAutoSlide);
             heroSlider.addEventListener('mouseleave', startAutoSlide);
+        }
+
+        function openPromoModal() {
+            const overlay = document.getElementById('promoModalOverlay');
+            if (overlay) {
+                overlay.style.display = 'flex';
+                document.body.style.overflow = 'hidden';
+                // Reset cart count in modal
+                const promoCartCount = document.getElementById('promoModalCartCount');
+                const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+                if (promoCartCount) promoCartCount.textContent = totalItems;
+            }
+        }
+
+        function closePromoModal(event) {
+            const overlay = document.getElementById('promoModalOverlay');
+            if (overlay) {
+                overlay.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            }
+        }
+
+        function directBuyPromo(productName, productPrice) {
+            // Find product in our global products array
+            const product = products.find(p => p.name === productName);
+            if (product) {
+                addToCart(product.id);
+                // Notification already handled by addToCart
+            } else {
+                // If not in products list, add manually (fallback)
+                const existing = cart.find(item => item.name === productName);
+                if (existing) {
+                    existing.quantity++;
+                } else {
+                    cart.push({
+                        id: Date.now(), // temporary id
+                        name: productName,
+                        price: productPrice,
+                        quantity: 1,
+                        image: null
+                    });
+                }
+                updateCart();
+                showNotification(`✓ ${productName} ditambahkan ke keranjang!`);
+            }
         }
 
         window.addEventListener('load', () => {
@@ -5507,8 +5645,13 @@
                     const pulse = document.getElementById('msgPulse');
                     if (badge) { 
                         if (data.unread_count > 0) { 
+                            if (badge.textContent != data.unread_count) {
+                                badge.textContent = data.unread_count > 9 ? '9+' : data.unread_count;
+                                badge.classList.remove('badge-updated');
+                                void badge.offsetWidth; // Trigger reflow
+                                badge.classList.add('badge-updated');
+                            }
                             badge.style.display = 'flex'; 
-                            badge.textContent = data.unread_count > 9 ? '9+' : data.unread_count; 
                             if (pulse) pulse.style.display = 'block';
                         } else { 
                             badge.style.display = 'none'; 

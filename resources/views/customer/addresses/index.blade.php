@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Alamat Saya - Warmer Bakery</title>
+    <title>Alamat Saya - Dapoer Budess</title>
     <link rel="stylesheet" href="/css/customer-profile.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
@@ -114,7 +114,7 @@
                                         </button>
                                     </form>
                                     @endif
-                                    <button onclick="editAddress({{ $address->id }})" class="btn btn-sm btn-edit">
+                                    <button onclick="editAddress({{ json_encode($address) }})" class="btn btn-sm btn-edit">
                                         <i class="fas fa-edit"></i> Edit
                                     </button>
                                     <form method="POST" action="{{ route('customer.addresses.destroy', $address->id) }}" 
@@ -255,15 +255,43 @@
             document.getElementById('addressForm').action = '{{ route("customer.addresses.store") }}';
             document.getElementById('formMethod').value = 'POST';
             document.getElementById('addressForm').reset();
+            document.getElementById('addressForm').elements['is_primary'].disabled = false;
         }
 
         function closeAddressModal() {
             document.getElementById('addressModal').style.display = 'none';
         }
 
-        function editAddress(id) {
-            // Implement edit functionality
-            alert('Edit alamat ID: ' + id + ' - Coming soon!');
+        function editAddress(address) {
+            document.getElementById('addressModal').style.display = 'block';
+            document.getElementById('modalTitle').textContent = 'Edit Alamat';
+            
+            const form = document.getElementById('addressForm');
+            form.action = `/customer/addresses/${address.id}`;
+            document.getElementById('formMethod').value = 'PUT';
+            
+            // Fill form fields
+            form.elements['label'].value = address.label;
+            form.elements['recipient_name'].value = address.recipient_name;
+            form.elements['phone'].value = address.phone;
+            form.elements['address'].value = address.address;
+            form.elements['house_number'].value = address.house_number || '';
+            form.elements['rt_rw'].value = address.rt_rw || '';
+            form.elements['address_detail'].value = address.address_detail || '';
+            form.elements['district'].value = address.district || '';
+            form.elements['city'].value = address.city;
+            form.elements['province'].value = address.province;
+            form.elements['postal_code'].value = address.postal_code || '';
+            
+            // Handle checkbox
+            form.elements['is_primary'].checked = address.is_primary == 1;
+            
+            // If it's already primary, maybe disable the checkbox or just keep it checked
+            if (address.is_primary == 1) {
+                form.elements['is_primary'].disabled = true;
+            } else {
+                form.elements['is_primary'].disabled = false;
+            }
         }
 
         // Close modal when clicking outside

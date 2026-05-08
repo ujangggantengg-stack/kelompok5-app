@@ -161,11 +161,56 @@ class AdminController extends Controller
     {
         $validated = $request->validate([
             'status' => 'required|in:pending,pending_admin,shipping_set,pending_payment,payment_confirmed,processing,scheduled,out_for_delivery,shipped,delivered,cancelled,ready_for_pickup,picked_up',
-            'notes' => 'nullable|string'
+            'notes' => 'nullable|string',
+            'estimated_delivery_date' => 'nullable|date',
+            'estimated_delivery_time' => 'nullable|string|max:100',
         ]);
 
         $order = Order::findOrFail($id);
-        $order->update($validated);
+        
+        // Data to update
+        $updateData = [
+            'status' => $validated['status']
+        ];
+
+        // Handle scheduled status logic
+        if ($validated['status'] === 'scheduled' && $request->filled('estimated_delivery_date')) {
+            $updateData['estimated_delivery_date'] = $validated['estimated_delivery_date'];
+            $updateData['estimated_delivery_time'] = $validated['estimated_delivery_time'];
+            $updateData['responded_at'] = now();
+
+            // Auto-send message to customer if they have a chat thread
+            if ($order->message_thread_id) {
+                \Carbon\Carbon::setLocale('id');
+                $deliveryDate = \Carbon\Carbon::parse($validated['estimated_delivery_date']);
+                $dayName = $deliveryDate->translatedFormat('l');
+                $formattedDate = $deliveryDate->translatedFormat('d F Y');
+
+                $responseMessage = "Halo! Pesanan Anda *{$order->order_number}* telah dijadwalkan 🍞\n\n" .
+                    "Estimasi pengantaran:\n" .
+                    "📅 Hari: {$dayName}, {$formattedDate}\n" .
+                    "⏰ Jam: {$validated['estimated_delivery_time']} WIB\n\n";
+                
+                if ($validated['notes']) {
+                    $responseMessage .= "💬 Catatan dari admin:\n{$validated['notes']}\n\n";
+                }
+                    
+                $responseMessage .= "Mohon ditunggu ya, terima kasih! 🙏";
+
+                \App\Models\ChatMessage::create([
+                    'message_thread_id' => $order->message_thread_id,
+                    'order_id' => $order->id,
+                    'sender_type' => 'admin',
+                    'message_type' => 'admin_response',
+                    'message' => $responseMessage,
+                    'is_read' => false,
+                ]);
+
+                $order->messageThread()->update(['last_message_at' => now()]);
+            }
+        }
+
+        $order->update($updateData);
 
         return redirect()->back()->with('success', 'Order status updated successfully');
     }

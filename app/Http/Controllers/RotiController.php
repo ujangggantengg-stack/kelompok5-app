@@ -14,6 +14,9 @@ use Illuminate\Support\Str;
 use App\Models\PromoSetting;
 use App\Models\PromoModalProduct;
 
+use App\Models\PromoBanner;
+use App\Models\PromoProduct;
+
 class RotiController extends Controller
 {
     public function index()

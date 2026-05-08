@@ -656,7 +656,7 @@
                     @method('PATCH')
                     
                     <div class="form-group">
-                        <select name="status">
+                        <select name="status" id="status-select">
                             @if($order->shipping_method === 'pickup')
                                 <!-- Status untuk Ambil Sendiri di Toko -->
                                 <option value="pending_admin" @if($order->status === 'pending_admin') selected @endif>⏳ Menunggu Konfirmasi Admin</option>
@@ -679,6 +679,19 @@
                                 <option value="cancelled" @if($order->status === 'cancelled') selected @endif>❌ Dibatalkan</option>
                             @endif
                         </select>
+                    </div>
+
+                    <!-- Additional Fields for Scheduled Status -->
+                    <div id="scheduled-fields" style="display: none; background: rgba(255, 215, 0, 0.05); padding: 1rem; border-radius: 8px; margin-bottom: 1rem; border: 1px dashed #FFD700;">
+                        <div class="form-group">
+                            <label style="color: #FFD700; font-size: 0.8rem; font-weight: 600;">📅 Tanggal Pengantaran</label>
+                            <input type="date" name="estimated_delivery_date" value="{{ $order->estimated_delivery_date ? (is_string($order->estimated_delivery_date) ? $order->estimated_delivery_date : $order->estimated_delivery_date->format('Y-m-d')) : date('Y-m-d') }}" style="background: #1a1a1a; border: 1px solid #333; color: #fff; width: 100%; padding: 0.5rem; border-radius: 6px; margin-top: 0.25rem;">
+                        </div>
+                        <div class="form-group">
+                            <label style="color: #FFD700; font-size: 0.8rem; font-weight: 600;">⏰ Jam Pengantaran</label>
+                            <input type="text" name="estimated_delivery_time" value="{{ $order->estimated_delivery_time }}" placeholder="Contoh: 15.00 - 16.00" style="background: #1a1a1a; border: 1px solid #333; color: #fff; width: 100%; padding: 0.5rem; border-radius: 6px; margin-top: 0.25rem;">
+                        </div>
+                        <p style="font-size: 0.7rem; color: #999; margin-top: 0.5rem; font-style: italic;">* Estimasi akan dikirimkan ke pesan customer otomatis.</p>
                     </div>
                     
                     <div class="form-group">
@@ -721,6 +734,25 @@ function closeImageModal() {
 document.addEventListener('keydown', function(event) {
     if (event.key === 'Escape') {
         closeImageModal();
+    }
+});
+
+// Toggle Scheduled Fields
+document.addEventListener('DOMContentLoaded', function() {
+    const statusSelect = document.getElementById('status-select');
+    const scheduledFields = document.getElementById('scheduled-fields');
+
+    if (statusSelect && scheduledFields) {
+        function toggleFields() {
+            if (statusSelect.value === 'scheduled') {
+                scheduledFields.style.display = 'block';
+            } else {
+                scheduledFields.style.display = 'none';
+            }
+        }
+
+        statusSelect.addEventListener('change', toggleFields);
+        toggleFields(); // Initial check
     }
 });
 </script>
