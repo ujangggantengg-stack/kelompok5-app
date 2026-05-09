@@ -208,6 +208,10 @@ Route::middleware(['auth', 'is_admin'])->prefix('admin')->name('admin.')->group(
     Route::get('/notifications', [\App\Http\Controllers\Admin\NotificationController::class, 'index'])->name('notifications.index');
     Route::get('/notifications/unread', [\App\Http\Controllers\Admin\NotificationController::class, 'getUnread'])->name('notifications.unread');
     Route::post('/notifications/{id}/read', [\App\Http\Controllers\Admin\NotificationController::class, 'markAsRead'])->name('notifications.read');
+
+    // Operating Hours Settings
+    Route::get('/settings/operating-hours', [\App\Http\Controllers\Admin\SettingsController::class, 'operatingHours'])->name('settings.operating-hours');
+    Route::post('/settings/operating-hours', [\App\Http\Controllers\Admin\SettingsController::class, 'updateOperatingHours'])->name('settings.update-operating-hours');
     Route::post('/notifications/read-all', [\App\Http\Controllers\Admin\NotificationController::class, 'markAllAsRead'])->name('notifications.read-all');
     Route::delete('/notifications/{id}', [\App\Http\Controllers\Admin\NotificationController::class, 'delete'])->name('notifications.delete');
     Route::delete('/notifications', [\App\Http\Controllers\Admin\NotificationController::class, 'deleteAll'])->name('notifications.delete-all');
@@ -224,6 +228,9 @@ Route::middleware(['auth', 'is_admin'])->prefix('admin')->name('admin.')->group(
 // Route::post('/api/validate-promo', [RotiController::class, 'validatePromo']); (Removed)
 Route::get('/api/shipping-rates', [RotiController::class, 'getShippingRates']);
 Route::post('/api/upload-payment-proof', [RotiController::class, 'uploadPaymentProof'])->name('payment.upload');
+
+// API for Operating Hours
+Route::get('/api/operating-hours', [\App\Http\Controllers\Admin\SettingsController::class, 'getOperatingHours'])->name('api.operating-hours');
 
 // Public Contact Form
 Route::post('/contact', [\App\Http\Controllers\Admin\ContactMessageController::class, 'store'])->name('contact.store');

@@ -23,6 +23,29 @@
             min-height: 100vh;
         }
         
+        /* Mobile Menu Toggle */
+        .mobile-menu-toggle {
+            display: none;
+            position: fixed;
+            top: 1rem;
+            left: 1rem;
+            z-index: 1001;
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+            border: none;
+            width: 44px;
+            height: 44px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.5rem;
+            color: #1a1a1a;
+            box-shadow: 0 4px 12px rgba(255, 215, 0, 0.3);
+            transition: all 0.3s;
+        }
+        
+        .mobile-menu-toggle:active {
+            transform: scale(0.95);
+        }
+        
         /* Sidebar */
         .admin-sidebar {
             width: 200px;
@@ -33,6 +56,8 @@
             height: 100vh;
             overflow-y: auto;
             background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 600"><defs><pattern id="bread" x="0" y="0" width="200" height="300" patternUnits="userSpaceOnUse"><image href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Ccircle cx=%2250%22 cy=%2250%22 r=%2240%22 fill=%22%23D2691E%22 opacity=%220.1%22/%3E%3C/svg%3E" x="0" y="0" width="200" height="300"/%3E</pattern></defs><rect width="400" height="600" fill="%231a1a1a"/><rect width="400" height="600" fill="url(%23bread)"/></svg>');
+            transition: transform 0.3s ease;
+            z-index: 1000;
         }
         
         .admin-sidebar .logo {
@@ -107,6 +132,7 @@
             flex: 1;
             display: flex;
             flex-direction: column;
+            transition: margin-left 0.3s ease;
         }
         
         .admin-header {
@@ -176,11 +202,13 @@
         /* Table */
         .table-responsive {
             overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
         }
         
         table {
             width: 100%;
             border-collapse: collapse;
+            min-width: 600px;
         }
         
         table thead {
@@ -195,6 +223,7 @@
             font-weight: 700;
             font-size: 0.875rem;
             text-transform: uppercase;
+            white-space: nowrap;
         }
         
         table td {
@@ -219,6 +248,7 @@
             font-weight: 600;
             transition: all 0.3s;
             text-decoration: none;
+            font-size: 0.9rem;
         }
         
         .btn-primary {
@@ -265,26 +295,117 @@
             color: #f44336;
         }
         
+        /* Mobile Overlay */
+        .mobile-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 999;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .mobile-overlay.active {
+            opacity: 1;
+        }
+        
         /* Responsive */
         @media (max-width: 768px) {
+            .mobile-menu-toggle {
+                display: block;
+            }
+            
             .admin-sidebar {
-                width: 150px;
+                transform: translateX(-100%);
+            }
+            
+            .admin-sidebar.mobile-open {
+                transform: translateX(0);
+            }
+            
+            .mobile-overlay {
+                display: block;
             }
             
             .admin-main {
-                margin-left: 150px;
+                margin-left: 0;
+            }
+            
+            .admin-header {
+                padding: 1rem 1rem 1rem 4rem;
+            }
+            
+            .admin-header-title h1 {
+                font-size: 1.125rem;
             }
             
             .admin-content {
                 padding: 1rem;
             }
+            
+            .admin-sidebar .logo-icon {
+                width: 80px;
+                height: 80px;
+            }
+            
+            .admin-sidebar nav a {
+                padding: 0.875rem 1rem;
+                font-size: 0.85rem;
+            }
+            
+            .admin-sidebar nav a span:first-child {
+                font-size: 1.1rem;
+            }
+            
+            .btn {
+                padding: 0.625rem 1rem;
+                font-size: 0.85rem;
+            }
+            
+            table th, table td {
+                padding: 0.75rem 0.5rem;
+                font-size: 0.85rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .admin-header-title h1 {
+                font-size: 1rem;
+            }
+            
+            .admin-sidebar {
+                width: 180px;
+            }
+            
+            .admin-sidebar nav a {
+                padding: 0.75rem 0.875rem;
+                font-size: 0.8rem;
+            }
+            
+            .card {
+                padding: 1rem;
+            }
+            
+            table {
+                min-width: 500px;
+            }
         }
     </style>
 </head>
 <body>
+    <!-- Mobile Menu Toggle -->
+    <button class="mobile-menu-toggle" onclick="toggleMobileMenu()">☰</button>
+    
+    <!-- Mobile Overlay -->
+    <div class="mobile-overlay" id="mobileOverlay" onclick="closeMobileMenu()"></div>
+    
     <div class="admin-wrapper">
         <!-- Sidebar -->
-        <div class="admin-sidebar">
+        <div class="admin-sidebar" id="adminSidebar">
             <div class="logo">
                 <div class="logo-icon">
                     <img src="{{ asset('images/budess.jpg') }}" alt="Dapoer Budess">
@@ -292,37 +413,41 @@
             </div>
             
             <nav>
-                <a href="{{ route('admin.dashboard') }}" class="@if(Route::currentRouteName() === 'admin.dashboard') active @endif">
+                <a href="{{ route('admin.dashboard') }}" class="@if(Route::currentRouteName() === 'admin.dashboard') active @endif" onclick="closeMobileMenu()">
                     <span>📊</span>
                     <span>Dashboard</span>
                 </a>
-                <a href="{{ route('admin.products.index') }}" class="@if(str_contains(Route::currentRouteName(), 'products')) active @endif">
+                <a href="{{ route('admin.products.index') }}" class="@if(str_contains(Route::currentRouteName(), 'products')) active @endif" onclick="closeMobileMenu()">
                     <span>🍞</span>
                     <span>Produk</span>
                 </a>
-                <a href="{{ route('admin.orders.index') }}" class="@if(str_contains(Route::currentRouteName(), 'orders')) active @endif">
+                <a href="{{ route('admin.orders.index') }}" class="@if(str_contains(Route::currentRouteName(), 'orders')) active @endif" onclick="closeMobileMenu()">
                     <span>📦</span>
                     <span>Pesanan</span>
                 </a>
-                <a href="{{ route('admin.reviews.index') }}" class="@if(str_contains(Route::currentRouteName(), 'reviews')) active @endif">
+                <a href="{{ route('admin.reviews.index') }}" class="@if(str_contains(Route::currentRouteName(), 'reviews')) active @endif" onclick="closeMobileMenu()">
                     <span>⭐</span>
                     <span>Ulasan</span>
                 </a>
-                <a href="{{ route('admin.promo.edit') }}" class="@if(str_contains(Route::currentRouteName(), 'promo')) active @endif">
+                <a href="{{ route('admin.promo.edit') }}" class="@if(str_contains(Route::currentRouteName(), 'promo')) active @endif" onclick="closeMobileMenu()">
                     <span>🔥</span>
                     <span>Pengaturan Promo</span>
                 </a>
-                <a href="{{ route('admin.messages.index') }}" class="@if(str_contains(Route::currentRouteName(), 'messages')) active @endif">
+                <a href="{{ route('admin.messages.index') }}" class="@if(str_contains(Route::currentRouteName(), 'messages')) active @endif" onclick="closeMobileMenu()">
                     <span>✉️</span>
                     <span>Pesan</span>
                 </a>
-                <a href="{{ route('admin.reports') }}" class="@if(Route::currentRouteName() === 'admin.reports') active @endif">
+                <a href="{{ route('admin.reports') }}" class="@if(Route::currentRouteName() === 'admin.reports') active @endif" onclick="closeMobileMenu()">
                     <span>📈</span>
                     <span>Laporan</span>
                 </a>
-                <a href="{{ route('admin.payment-settings.index') }}" class="@if(str_contains(Route::currentRouteName(), 'payment-settings')) active @endif">
+                <a href="{{ route('admin.payment-settings.index') }}" class="@if(str_contains(Route::currentRouteName(), 'payment-settings')) active @endif" onclick="closeMobileMenu()">
                     <span>💳</span>
                     <span>Pembayaran</span>
+                </a>
+                <a href="{{ route('admin.settings.operating-hours') }}" class="@if(str_contains(Route::currentRouteName(), 'settings.operating-hours')) active @endif" onclick="closeMobileMenu()">
+                    <span>🕐</span>
+                    <span>Jam Operasional</span>
                 </a>
                 <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                     <span>👋</span>
@@ -351,5 +476,38 @@
             </div>
         </div>
     </div>
+    
+    <script>
+        function toggleMobileMenu() {
+            const sidebar = document.getElementById('adminSidebar');
+            const overlay = document.getElementById('mobileOverlay');
+            
+            sidebar.classList.toggle('mobile-open');
+            overlay.classList.toggle('active');
+            
+            // Prevent body scroll when menu is open
+            if (sidebar.classList.contains('mobile-open')) {
+                document.body.style.overflow = 'hidden';
+            } else {
+                document.body.style.overflow = '';
+            }
+        }
+        
+        function closeMobileMenu() {
+            const sidebar = document.getElementById('adminSidebar');
+            const overlay = document.getElementById('mobileOverlay');
+            
+            sidebar.classList.remove('mobile-open');
+            overlay.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+        
+        // Close menu on window resize if open
+        window.addEventListener('resize', function() {
+            if (window.innerWidth > 768) {
+                closeMobileMenu();
+            }
+        });
+    </script>
 </body>
 </html>

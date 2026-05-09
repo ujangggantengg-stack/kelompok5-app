@@ -46,7 +46,7 @@
                     <div class="card-image-box">
                         <img src="/images/hero/enakk.jpg" alt="Roti Sobek Coklat Keju">
                         <span class="card-badge-promo-tag">PROMO</span>
-                        <div class="card-cart-icon-float">
+                        <div class="card-cart-icon-float" onclick="directBuyPromo('Roti Sobek Coklat Keju', 27000, '/images/hero/enakk.jpg')">
                             <i class="fas fa-shopping-cart"></i>
                         </div>
                     </div>
@@ -66,7 +66,7 @@
                         
                         <p class="card-status-small">⚡ Promo terbatas!</p>
 
-                        <button class="card-btn-buy-artisan">
+                        <button class="card-btn-buy-artisan" onclick="directBuyPromo('Roti Sobek Coklat Keju', 27000, '/images/hero/enakk.jpg')">
                             🛒 Beli
                         </button>
                     </div>
@@ -77,7 +77,7 @@
                     <div class="card-image-box">
                         <img src="/images/hero/slide2.jpg" alt="ROTI GULA MANIS">
                         <span class="card-badge-promo-tag">PROMO</span>
-                        <div class="card-cart-icon-float">
+                        <div class="card-cart-icon-float" onclick="directBuyPromo('ROTI GULA MANIS', 27000, '/images/hero/slide2.jpg')">
                             <i class="fas fa-shopping-cart"></i>
                         </div>
                     </div>
@@ -97,7 +97,7 @@
                         
                         <p class="card-status-small">🔥 Stok menipis!</p>
 
-                        <button class="card-btn-buy-artisan">
+                        <button class="card-btn-buy-artisan" onclick="directBuyPromo('ROTI GULA MANIS', 27000, '/images/hero/slide2.jpg')">
                             🛒 Beli
                         </button>
                     </div>
@@ -108,7 +108,7 @@
                     <div class="card-image-box">
                         <img src="/images/hero/slide3.jpg" alt="Roti Sobek Pisang Coklat">
                         <span class="card-badge-promo-tag">PROMO</span>
-                        <div class="card-cart-icon-float">
+                        <div class="card-cart-icon-float" onclick="directBuyPromo('Roti Sobek Pisang Coklat', 27000, '/images/hero/slide3.jpg')">
                             <i class="fas fa-shopping-cart"></i>
                         </div>
                     </div>
@@ -128,7 +128,7 @@
                         
                         <p class="card-status-small">✨ Fresh setiap hari!</p>
 
-                        <button class="card-btn-buy-artisan">
+                        <button class="card-btn-buy-artisan" onclick="directBuyPromo('Roti Sobek Pisang Coklat', 27000, '/images/hero/slide3.jpg')">
                             🛒 Beli
                         </button>
                     </div>

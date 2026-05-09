@@ -245,29 +245,49 @@
 
         .cart-count {
             position: absolute;
-            top: -10px;
-            right: -10px;
-            background: #FF0000;
-            color: white;
-            min-width: 22px;
-            height: 22px;
-            padding: 0 6px;
-            border-radius: 11px;
+            top: -12px;
+            right: -12px;
+            background: linear-gradient(135deg, #FF1744 0%, #D50000 100%);
+            color: #FFFFFF;
+            min-width: 32px;
+            height: 32px;
+            padding: 0 10px;
+            border-radius: 16px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 0.75rem;
-            font-weight: 800;
-            border: 2px solid #FFFFFF;
-            box-shadow: 0 4px 10px rgba(255, 0, 0, 0.4);
+            font-size: 1rem;
+            font-weight: 900;
+            border: 4px solid #FFFFFF;
+            box-shadow: 0 4px 16px rgba(255, 23, 68, 0.6), 
+                        0 2px 8px rgba(0, 0, 0, 0.3),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.3);
             z-index: 100;
             transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             pointer-events: none;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', sans-serif;
+            letter-spacing: 0;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+            line-height: 1;
         }
 
         .cart-btn:hover .cart-count {
-            transform: scale(1.2);
-            box-shadow: 0 6px 15px rgba(255, 0, 0, 0.5);
+            transform: scale(1.15);
+            box-shadow: 0 6px 20px rgba(255, 23, 68, 0.7), 
+                        0 3px 10px rgba(0, 0, 0, 0.4),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+        }
+        
+        /* Mobile optimization */
+        @media (max-width: 768px) {
+            .cart-count {
+                top: -10px;
+                right: -10px;
+                min-width: 28px;
+                height: 28px;
+                font-size: 0.95rem;
+                border: 3px solid #FFFFFF;
+            }
         }
 
         @keyframes badgePulse {
@@ -3302,12 +3322,179 @@
             }
         }
 
+        /* ========== CUSTOM NOTIFICATION (RESPONSIVE) ========== */
+        .custom-notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            box-shadow: 
+                0 8px 24px rgba(0, 0, 0, 0.2),
+                0 4px 8px rgba(139, 69, 19, 0.3);
+            z-index: 110000;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 600;
+            font-size: 0.95rem;
+            max-width: 350px;
+            word-wrap: break-word;
+            opacity: 0;
+            transform: translateX(400px);
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            pointer-events: none;
+        }
+
+        .custom-notification.show {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        /* Mobile Responsive Notification */
+        @media (max-width: 768px) {
+            .custom-notification {
+                top: 10px;
+                right: 10px;
+                left: 10px;
+                max-width: calc(100% - 20px);
+                padding: 0.875rem 1.25rem;
+                font-size: 0.875rem;
+                border-radius: 10px;
+                text-align: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .custom-notification {
+                top: 10px;
+                right: 10px;
+                left: 10px;
+                padding: 0.75rem 1rem;
+                font-size: 0.8rem;
+                border-radius: 8px;
+            }
+        }
+
+        /* ========== SHOP CLOSED MODAL (RESPONSIVE) ========== */
+        #shopClosedModal .message-modal-content {
+            max-width: 500px;
+            padding: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            #shopClosedModal .message-modal-content {
+                padding: 1.75rem 1.5rem;
+                width: 92vw;
+            }
+
+            #shopClosedModal h2 {
+                font-size: 1.3rem !important;
+            }
+
+            #shopClosedModal p {
+                font-size: 0.9rem !important;
+            }
+
+            #shopClosedModal button {
+                font-size: 0.9rem !important;
+                padding: 0.75rem 1.25rem !important;
+            }
+        }
+
+        @media (max-width: 480px) {
+            #shopClosedModal .message-modal-content {
+                padding: 1.5rem 1.25rem;
+                width: 95vw;
+            }
+
+            #shopClosedModal h2 {
+                font-size: 1.2rem !important;
+            }
+
+            #shopClosedModal p {
+                font-size: 0.85rem !important;
+                line-height: 1.5 !important;
+            }
+
+            #shopClosedModal button {
+                font-size: 0.85rem !important;
+                padding: 0.7rem 1rem !important;
+                min-width: 100px !important;
+            }
+
+            #shopClosedModal > div > div:first-child {
+                margin-bottom: 1.25rem !important;
+            }
+
+            #shopClosedModal > div > div:first-child > div:first-child {
+                font-size: 3rem !important;
+                margin-bottom: 0.75rem !important;
+            }
+        }
+
         /* ========== SECTION DIVIDER ========== */
         .section-divider {
             height: 3px;
             background: linear-gradient(90deg, transparent, var(--accent), transparent);
             margin: 3rem 0;
             border-radius: 10px;
+        }
+        
+        /* ========== HEADER BUTTONS STYLING ========== */
+        .cart-btn, .message-btn {
+            background: rgba(255, 248, 220, 0.15);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 248, 220, 0.3);
+            color: var(--cream);
+            padding: 0.5rem 1rem;
+            height: 40px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.9rem;
+            font-family: 'Outfit', sans-serif;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .cart-btn:hover, .message-btn:hover {
+            background: rgba(255, 248, 220, 0.25);
+            border-color: rgba(255, 248, 220, 0.5);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+        }
+        
+        .cart-btn .btn-icon, .message-btn .btn-icon {
+            font-size: 1.2rem;
+            line-height: 1;
+        }
+        
+        .cart-btn .btn-text, .message-btn .btn-text {
+            font-weight: 600;
+            letter-spacing: 0.3px;
+        }
+        
+        /* Mobile optimization for header buttons */
+        @media (max-width: 768px) {
+            .cart-btn, .message-btn {
+                padding: 0.5rem;
+                min-width: 44px;
+                height: 44px;
+                justify-content: center;
+            }
+            
+            .cart-btn .btn-text, .message-btn .btn-text {
+                display: none;
+            }
+            
+            .cart-btn .btn-icon, .message-btn .btn-icon {
+                font-size: 1.4rem;
+                margin: 0;
+            }
         }
     </style>
 </head>
@@ -3395,18 +3582,49 @@
             <li><a href="javascript:void(0)" onclick="showSection('profile')">Profile</a></li>
         </ul>
 
-        <div class="header-actions">
-            <button class="cart-btn" onclick="toggleCart()">
-                <span class="btn-icon">🛒</span>
-                <span class="btn-text">Keranjang</span>
-                <span class="cart-count" id="cartCount">0</span>
-            </button>
-            <button class="message-btn" onclick="openMessageModal()" style="position: relative;">
-                <span class="btn-icon">💬</span>
-                <span class="btn-text">Pesan</span>
-                <span class="cart-count" id="msgBadge" style="display: none;">0</span>
-                <span id="msgPulse" style="display: none; position: absolute; top: -10px; right: -10px; width: 22px; height: 22px; background: rgba(255, 0, 0, 0.4); border-radius: 50%; z-index: 99; animation: pulse-red-badge 2s infinite;"></span>
-            </button>
+       <div class="header-actions">
+    <button class="cart-btn" onclick="toggleCart()" style="position: relative;">
+        <span class="btn-icon">🛒</span>
+        <span class="btn-text">Keranjang</span>
+        <span class="cart-count" id="cartCount">0</span>
+    </button>
+
+    <button class="message-btn" onclick="openMessageModal()" style="position: relative;">
+        <span class="btn-icon">💬</span>
+        <span class="btn-text">Pesan</span>
+        <span id="msgBadge" style="
+            display: none;
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            min-width: 18px;
+            height: 18px;
+            padding: 0 5px;
+            background: #e53e3e;
+            color: white;
+            font-size: 10px;
+            font-weight: 800;
+            border-radius: 9px;
+            align-items: center;
+            justify-content: center;
+            line-height: 1;
+            box-sizing: border-box;
+            border: 2px solid #1a0f06;
+        ">0</span>
+        <span id="msgPulse" style="
+            display: none;
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            width: 18px;
+            height: 18px;
+            background: rgba(229, 62, 62, 0.35);
+            border-radius: 50%;
+            z-index: 100;
+            animation: pulse-red-badge 2s infinite;
+            pointer-events: none;
+        "></span>
+    </button>
             
             @auth('customer')
                 <!-- User Menu (Logged In) -->
@@ -3479,11 +3697,11 @@
             @else
                 <!-- Login/Register Buttons (Guest) -->
                 <a href="{{ route('customer.login') }}" class="login-btn" style="background: transparent; border: 1.5px solid var(--cream); color: var(--cream); padding: 0.4rem 1rem; height: 34px; border-radius: 10px; text-decoration: none; font-weight: 500; transition: all 0.3s ease; font-family: 'Outfit', sans-serif; display: inline-flex; align-items: center; gap: 0.4rem; font-size: 0.85rem;" title="Masuk">
-                    <span style="font-size: 1rem;">🔐</span>
+                    <span style="font-size: 1rem;">👤</span>
                     <span class="btn-text">Masuk</span>
                 </a>
                 <a href="{{ route('customer.register') }}" class="register-btn" style="background: linear-gradient(135deg, var(--accent), var(--secondary)); color: white; padding: 0.4rem 1rem; height: 34px; border-radius: 10px; text-decoration: none; font-weight: 600; transition: all 0.3s ease; font-family: 'Outfit', sans-serif; box-shadow: 0 4px 12px rgba(244, 164, 96, 0.3); display: inline-flex; align-items: center; gap: 0.4rem; font-size: 0.85rem;" title="Daftar">
-                    <span style="font-size: 1rem;">✨</span>
+                    <span style="font-size: 1rem;">📝</span>
                     <span class="btn-text">Daftar</span>
                 </a>
             @endauth
@@ -3670,7 +3888,7 @@
                     <button onclick="toggleCart()" style="background: white; border: 2px solid #D2B48C; padding: 10px 25px; border-radius: 50px; color: #3B1F0A; font-weight: 700; cursor: pointer; font-size: 0.95rem; display: inline-flex; align-items: center; gap: 10px; transition: all 0.3s; box-shadow: 0 4px 10px rgba(0,0,0,0.05); font-family: 'Outfit', sans-serif;">
                         🛒 Lihat Keranjang (<span id="promoModalCartCount">0</span>)
                     </button>
-                    <button onclick="closePromoModal(event)" style="background: #3B1F0A; border: none; padding: 10px 25px; border-radius: 50px; color: white; font-weight: 700; cursor: pointer; font-size: 0.95rem; display: inline-flex; align-items: center; gap: 10px; transition: all 0.3s; box-shadow: 0 4px 15px rgba(59, 31, 10, 0.4); font-family: 'Outfit', sans-serif;">
+                    <button onclick="finishPromoShopping(event)" style="background: #3B1F0A; border: none; padding: 10px 25px; border-radius: 50px; color: white; font-weight: 700; cursor: pointer; font-size: 0.95rem; display: inline-flex; align-items: center; gap: 10px; transition: all 0.3s; box-shadow: 0 4px 15px rgba(59, 31, 10, 0.4); font-family: 'Outfit', sans-serif;">
                         ✓ Selesai Belanja
                     </button>
                 </div>
@@ -3683,7 +3901,7 @@
                                 @if($p->badge)
                                     <span class="promo-product-badge">{{ $p->badge }}</span>
                                 @endif
-                                <div class="promo-quick-add" onclick="directBuyPromo('{{ $p->name }}', {{ (int)$p->price_promo }})" title="Tambah ke Keranjang">🛒</div>
+                                <div class="promo-quick-add" onclick="directBuyPromo('{{ $p->name }}', {{ (int)$p->price_promo }}, '{{ $p->image ? '/' . $p->image : '' }}')" title="Tambah ke Keranjang">🛒</div>
                                 <img src="{{ $p->image ? '/' . $p->image : 'https://images.unsplash.com/photo-1509440159596-0249088772ff?w=500&h=500&fit=crop' }}" class="promo-product-img" alt="{{ $p->name }}">
                             </div>
                             <div class="promo-product-body">
@@ -3703,7 +3921,7 @@
                                 @if($p->bottom_label)
                                     <p class="promo-label-bottom">{{ $p->bottom_label }}</p>
                                 @endif
-                                <button class="promo-buy-btn" onclick="directBuyPromo('{{ $p->name }}', {{ (int)$p->price_promo }})">🛒 Beli</button>
+                                <button class="promo-buy-btn" onclick="directBuyPromo('{{ $p->name }}', {{ (int)$p->price_promo }}, '{{ $p->image ? '/' . $p->image : '' }}')">🛒 Beli</button>
                             </div>
                         </div>
                         @endforeach
@@ -3831,6 +4049,17 @@
                 
                 <form id="checkoutForm" onsubmit="handleCheckoutSubmit(event)">
                     @csrf
+
+                    <!-- Dynamic Shop Status Box (Checkout) -->
+                    <div id="shopStatusBoxCheckout" style="margin-bottom: 1rem; padding: 1rem; border-radius: 12px; border-left: 4px solid #ccc; background: #f9f9f9; font-family: 'Outfit', sans-serif;">
+                        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 0.5rem;">
+                            <span id="shopStatusIconCheckout" style="font-size: 1.2rem;">🕒</span>
+                            <span id="shopStatusTitleCheckout" style="font-weight: 700; color: #3B1F0A;">Jam Operasional</span>
+                        </div>
+                        <div id="shopStatusTimeCheckout" style="font-size: 0.9rem; color: #666;">
+                            Memuat status toko...
+                        </div>
+                    </div>
                     
                     <!-- Contact Info Card -->
                     <div style="background: white; border-radius: 12px; padding: 1.25rem; margin-bottom: 1rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
@@ -4068,7 +4297,22 @@
                 <span>Total:</span>
                 <span id="total">Rp 0</span>
             </div>
-            <button class="checkout-btn" onclick="goToCheckout()">Lanjut ke Checkout</button>
+            
+            <!-- Dynamic Shop Status Box -->
+            <div id="shopStatusBox" style="margin: 1.5rem 0; padding: 1rem; border-radius: 12px; border-left: 4px solid #ccc; background: #f9f9f9; font-family: 'Outfit', sans-serif;">
+                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 0.5rem;">
+                    <span id="shopStatusIcon" style="font-size: 1.2rem;">🕒</span>
+                    <span id="shopStatusTitle" style="font-weight: 700; color: #3B1F0A;">Jam Operasional</span>
+                </div>
+                <div id="shopStatusTime" style="font-size: 0.9rem; color: #666; margin-bottom: 0.5rem;">
+                    Memuat status toko...
+                </div>
+                <div id="shopStatusNotice" style="font-size: 0.8rem; color: #A0522D; padding-top: 0.5rem; border-top: 1px dashed #ddd; display: none;">
+                    💡 Tips: Pesan sekarang untuk pengiriman jadwal berikutnya.
+                </div>
+            </div>
+
+            <button class="checkout-btn" id="checkoutBtn" onclick="goToCheckout()">Lanjut ke Checkout</button>
         </div>
     </div>
 
@@ -4240,7 +4484,7 @@
                 </div>
                 <div style="display: flex; flex-direction: column; gap: 1rem;">
                     <button onclick="addToCartOnly()" style="background: #f0f0f0; color: #333; border: 2px solid #ddd; padding: 1rem; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 1rem; transition: all 0.3s;">🛒 Masukkan Keranjang</button>
-                    <button onclick="buyNow()" style="background: var(--primary); color: white; border: none; padding: 1rem; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 1rem; transition: all 0.3s;">⚡ Beli Sekarang</button>
+                    <button onclick="buyNow()" style="background: var(--primary); color: white; border: none; padding: 1rem; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 1rem; transition: all 0.3s;">Beli</button>
                 </div>
             </div>
         </div>
@@ -4264,6 +4508,34 @@
         </div>
     </div>
     <div class="message-overlay" id="captchaOverlay" onclick="closeCaptchaModal()"></div>
+
+    <!-- Shop Closed Confirmation Modal -->
+    <div class="message-modal" id="shopClosedModal">
+        <div class="message-modal-content" style="max-width: 500px;">
+            <div style="text-align: center; margin-bottom: 1.5rem;">
+                <div style="font-size: 4rem; margin-bottom: 1rem;">🕐</div>
+                <h2 style="font-family: 'Playfair Display', serif; color: var(--primary); margin-bottom: 0.5rem; font-size: 1.5rem;">Toko Sedang Tutup</h2>
+            </div>
+            
+            <div style="background: #fff8e1; border-left: 4px solid #ffca28; border-radius: 8px; padding: 1.25rem; margin-bottom: 1.5rem;">
+                <p id="shopClosedMessage" style="margin: 0; font-size: 0.95rem; color: #856404; line-height: 1.6;"></p>
+            </div>
+            
+            <p style="text-align: center; color: #666; font-size: 0.9rem; margin-bottom: 1.5rem;">
+                Apakah Anda ingin tetap melanjutkan pesanan?
+            </p>
+            
+            <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                <button onclick="cancelShopClosedConfirm()" style="flex: 1; min-width: 120px; padding: 0.875rem 1.5rem; background: #f5f5f5; color: #333; border: 2px solid #ddd; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 0.95rem; transition: all 0.3s;">
+                    Batal
+                </button>
+                <button onclick="confirmShopClosedOrder()" style="flex: 1; min-width: 120px; padding: 0.875rem 1.5rem; background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 0.95rem; box-shadow: 0 4px 12px rgba(139, 69, 19, 0.3); transition: all 0.3s;">
+                    Ya, Lanjutkan
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="message-overlay" id="shopClosedOverlay" onclick="cancelShopClosedConfirm()"></div>
 
     
 
@@ -4342,7 +4614,7 @@
                         <div class="contact-icon">⏰</div>
                         <div class="contact-details">
                             <div class="contact-label">Jam Operasional</div>
-                            <div class="contact-value">Senin – Minggu: 07:00 – 13:00 WIB<br>Libur pada hari raya nasional</div>
+                            <div class="contact-value">Senin – Juma'at: 08:00 – 15:00 WIB<br>Sabtu: 08:00 – 13:00 WIB </div>
                         </div>
                     </div>
                     <div class="contact-item">
@@ -4375,6 +4647,31 @@
         let isFetchingChat = false;
         let messagePollingInterval;
         let lastMessageCount = 0;
+
+        // Operating Hours dari database (akan di-fetch saat page load)
+        let operatingHours = {
+            weekday_open: '08:00',
+            weekday_close: '15:00',
+            saturday_open: '08:00',
+            saturday_close: '13:00',
+            sunday_closed: true
+        };
+
+        // Fetch operating hours dari database
+        async function fetchOperatingHours() {
+            try {
+                const response = await fetch('/api/operating-hours');
+                if (response.ok) {
+                    operatingHours = await response.json();
+                    console.log('Operating hours loaded:', operatingHours);
+                }
+            } catch (error) {
+                console.error('Failed to fetch operating hours:', error);
+            }
+        }
+
+        // Load operating hours saat page load
+        fetchOperatingHours();
 
         function normalizePhone(phone) {
             if (!phone) return '';
@@ -4483,7 +4780,7 @@
                 return;
             }
             
-            // Untuk instant order, lanjutkan seperti biasa
+            // Untuk instant order, tampilkan modal dengan 2 pilihan
             window.selectedProduct = { id: productId, name: product.name, price: product.effective_price, isPreorder: false };
             showPurchaseModal();
         }
@@ -4500,8 +4797,23 @@
 
         function addToCartOnly() {
             // Langsung tambah ke keranjang tanpa CAPTCHA
-            const product = products.find(p => p.id === window.selectedProduct.id);
-            const existingItem = cart.find(item => item.id === window.selectedProduct.id);
+            let product = products.find(p => p.id === window.selectedProduct.id);
+            
+            // Fallback for promo/temp products
+            if (!product && window.selectedProduct.isPromo) {
+                product = {
+                    id: window.selectedProduct.id,
+                    name: window.selectedProduct.name,
+                    price: window.selectedProduct.price,
+                    effective_price: window.selectedProduct.price,
+                    image: window.selectedProduct.image,
+                    is_discount_active: false
+                };
+            }
+
+            if (!product) return;
+
+            const existingItem = cart.find(item => item.id === product.id);
             
             if (existingItem) {
                 existingItem.quantity++;
@@ -4509,10 +4821,10 @@
                 cart.push({ 
                     ...product, 
                     quantity: 1, 
-                    price: product.effective_price, 
+                    price: product.effective_price || product.price, 
                     original_price: product.price, 
-                    is_discounted: product.is_discount_active, 
-                    is_preorder: window.selectedProduct.isPreorder 
+                    is_discounted: product.is_discount_active || false, 
+                    is_preorder: window.selectedProduct.isPreorder || false 
                 });
             }
             
@@ -4521,29 +4833,96 @@
             showNotification(`${product.name} ditambahkan ke keranjang!`);
         }
 
-        function buyNow() {
-            // Tambah ke keranjang lalu lanjut ke checkout (yang akan memicu CAPTCHA)
-            const product = products.find(p => p.id === window.selectedProduct.id);
-            const existingItem = cart.find(item => item.id === window.selectedProduct.id);
-            
-            if (existingItem) {
-                existingItem.quantity++;
-            } else {
-                cart.push({ 
-                    ...product, 
-                    quantity: 1, 
-                    price: product.effective_price, 
-                    original_price: product.price, 
-                    is_discounted: product.is_discount_active, 
-                    is_preorder: window.selectedProduct.isPreorder 
-                });
+        function getNextOpenTime() {
+            const now = new Date();
+            const day = now.getDay(); 
+            const hour = now.getHours();
+            const minute = now.getMinutes();
+            const currentTime = hour * 100 + minute;
+
+            // Parse operating hours
+            const weekdayOpen = parseInt(operatingHours.weekday_open.replace(':', ''));
+            const saturdayOpen = parseInt(operatingHours.saturday_open.replace(':', ''));
+            const weekdayClose = parseInt(operatingHours.weekday_close.replace(':', ''));
+            const saturdayClose = parseInt(operatingHours.saturday_close.replace(':', ''));
+
+            if (day === 0) return `Senin jam ${operatingHours.weekday_open}`; // Hari ini Minggu
+            if (day === 6) { // Hari ini Sabtu
+                if (currentTime < saturdayOpen) return `pukul ${operatingHours.saturday_open} pagi ini`;
+                return `Senin jam ${operatingHours.weekday_open}`; // Sudah lewat jam tutup Sabtu
             }
+            if (currentTime < weekdayOpen) return `pukul ${operatingHours.weekday_open} pagi ini`;
+            if (day === 5 && currentTime >= weekdayClose) return `besok (Sabtu) jam ${operatingHours.saturday_open}`; // Jumat sore
+            return `besok jam ${operatingHours.weekday_open}`;
+        }
+
+        function isShopOpen() {
+            const now = new Date();
+            const day = now.getDay(); 
+            const hour = now.getHours();
+            const minute = now.getMinutes();
+            const currentTime = hour * 100 + minute;
+
+            // Parse operating hours
+            const weekdayOpen = parseInt(operatingHours.weekday_open.replace(':', ''));
+            const weekdayClose = parseInt(operatingHours.weekday_close.replace(':', ''));
+            const saturdayOpen = parseInt(operatingHours.saturday_open.replace(':', ''));
+            const saturdayClose = parseInt(operatingHours.saturday_close.replace(':', ''));
+
+            if (day === 0 && operatingHours.sunday_closed) return false; // Minggu Tutup
+            if (day === 6) return (currentTime >= saturdayOpen && currentTime < saturdayClose); // Sabtu
+            return (currentTime >= weekdayOpen && currentTime < weekdayClose); // Senin-Jumat
+        }
+
+        function buyNow() {
+            // Cek jam operasional sebelum lanjut
+            if (!isShopOpen()) {
+                const nextTime = getNextOpenTime();
+                const message = `Halo! Dapoer Budess sudah tutup saat ini. Pesanan Anda tetap akan kami terima, namun baru akan diproses ${nextTime}.`;
+                
+                showShopClosedModal(message, () => {
+                    // Lanjutkan proses buyNow setelah konfirmasi
+                    proceedBuyNow();
+                });
+                return;
+            }
+
+            proceedBuyNow();
+        }
+
+        function proceedBuyNow() {
+            // TIDAK tambah ke keranjang, langsung buat temporary cart untuk checkout
+            let product = products.find(p => p.id === window.selectedProduct.id);
+            
+            // Fallback for promo/temp products
+            if (!product && window.selectedProduct.isPromo) {
+                product = {
+                    id: window.selectedProduct.id,
+                    name: window.selectedProduct.name,
+                    price: window.selectedProduct.price,
+                    effective_price: window.selectedProduct.price,
+                    image: window.selectedProduct.image,
+                    is_discount_active: false
+                };
+            }
+
+            if (!product) return;
+
+            // Buat temporary cart dengan 1 produk ini saja (tidak merge dengan cart existing)
+            cart = [{ 
+                ...product, 
+                quantity: 1, 
+                price: product.effective_price || product.price, 
+                original_price: product.price, 
+                is_discounted: product.is_discount_active || false, 
+                is_preorder: window.selectedProduct.isPreorder || false 
+            }];
             
             updateCart();
             closePurchaseModal();
             
-            // Langsung ke checkout (captcha akan muncul di goToCheckout)
-            goToCheckout(true);
+            // Langsung ke checkout dengan flag fromBuyNow = true (skip pengecekan toko tutup)
+            goToCheckout(true, true);
         }
 
         function executePendingCartAction() {
@@ -4635,19 +5014,113 @@
                 cartItems.innerHTML = cart.map(item => `
                     <div class="cart-item">
                         <div class="cart-item-image">${item.image ? `<img src="${item.image}" alt="${item.name}" style="width:100%;height:100%;object-fit:cover;">` : '🍞'}</div>
-                        <div class="cart-item-details">
-                            <div class="cart-item-name">${item.name}</div>
-                            <div class="cart-item-price">Rp ${item.price.toLocaleString('id-ID')}</div>
-                            <div class="quantity-controls">
-                                <button class="quantity-btn" onclick="updateQuantity(${item.id}, -1)">-</button>
-                                <span style="padding: 0 1rem;">${item.quantity}</span>
-                                <button class="quantity-btn" onclick="updateQuantity(${item.id}, 1)">+</button>
-                                <button class="remove-item" onclick="removeItem(${item.id})">Hapus</button>
+                            <div class="cart-item-details">
+                                <div class="cart-item-name">${item.name}</div>
+                                <div class="cart-item-price">Rp ${item.price.toLocaleString('id-ID')}</div>
+                                <div class="quantity-controls">
+                                    <button class="quantity-btn" onclick="updateQuantity('${item.id}', -1)">-</button>
+                                    <span style="padding: 0 1rem; color: #3B1F0A; font-weight: 700;">${item.quantity}</span>
+                                    <button class="quantity-btn" onclick="updateQuantity('${item.id}', 1)">+</button>
+                                    <button class="remove-item" onclick="removeItem('${item.id}')">Hapus</button>
+                                </div>
                             </div>
-                        </div>
                     </div>`).join('');
                 updateTotals();
+                updateShopStatus(); // Update status toko
                 cartSummary.style.display = 'block';
+            }
+        }
+
+        function updateShopStatus() {
+            const box = document.getElementById('shopStatusBox');
+            const timeEl = document.getElementById('shopStatusTime');
+            const noticeEl = document.getElementById('shopStatusNotice');
+            const iconEl = document.getElementById('shopStatusIcon');
+            const titleEl = document.getElementById('shopStatusTitle');
+            const checkoutBtn = document.getElementById('checkoutBtn');
+
+            // Elements for Checkout Form
+            const box2 = document.getElementById('shopStatusBoxCheckout');
+            const timeEl2 = document.getElementById('shopStatusTimeCheckout');
+            const iconEl2 = document.getElementById('shopStatusIconCheckout');
+            const titleEl2 = document.getElementById('shopStatusTitleCheckout');
+
+            if (!box && !box2) return;
+
+            const now = new Date();
+            const day = now.getDay(); // 0: Sun, 1: Mon, ..., 6: Sat
+            const hour = now.getHours();
+            const minute = now.getMinutes();
+            const currentTime = hour * 100 + minute;
+
+            // Parse operating hours dari database
+            const weekdayOpen = parseInt(operatingHours.weekday_open.replace(':', ''));
+            const weekdayClose = parseInt(operatingHours.weekday_close.replace(':', ''));
+            const saturdayOpen = parseInt(operatingHours.saturday_open.replace(':', ''));
+            const saturdayClose = parseInt(operatingHours.saturday_close.replace(':', ''));
+            const sundayClosed = operatingHours.sunday_closed;
+
+            let isOpen = false;
+            let statusMsg = "";
+            let nextOpen = "";
+
+            if (day === 0 && sundayClosed) { // Minggu
+                isOpen = false;
+                statusMsg = "Maaf, Toko Libur Hari Ini";
+                nextOpen = `Buka kembali Senin pukul ${operatingHours.weekday_open} WIB`;
+            } else if (day === 6) { // Sabtu
+                if (currentTime >= saturdayOpen && currentTime < saturdayClose) {
+                    isOpen = true;
+                    statusMsg = "Kami Sedang Buka";
+                    nextOpen = `Tutup jam ${operatingHours.saturday_close} WIB (Hari Sabtu)`;
+                } else {
+                    isOpen = false;
+                    statusMsg = "Toko Sudah Tutup";
+                    nextOpen = currentTime < saturdayOpen ? `Buka jam ${operatingHours.saturday_open} WIB` : `Buka kembali Senin pukul ${operatingHours.weekday_open} WIB`;
+                }
+            } else { // Senin - Jumat
+                if (currentTime >= weekdayOpen && currentTime < weekdayClose) {
+                    isOpen = true;
+                    statusMsg = "Kami Sedang Buka";
+                    nextOpen = `Tutup jam ${operatingHours.weekday_close} WIB`;
+                } else {
+                    isOpen = false;
+                    statusMsg = "Toko Sudah Tutup";
+                    nextOpen = currentTime < weekdayOpen ? `Buka jam ${operatingHours.weekday_open} WIB` : `Buka kembali besok pukul ${operatingHours.weekday_open} WIB`;
+                }
+            }
+
+            // Update UI for both boxes
+            const updateUI = (b, i, t, tm, n = null) => {
+                if (!b) return;
+                if (isOpen) {
+                    b.style.borderColor = "#4CAF50";
+                    b.style.backgroundColor = "#F1F8E9";
+                    i.textContent = "🟢";
+                    t.textContent = statusMsg;
+                    t.style.color = "#2E7D32";
+                    tm.textContent = nextOpen;
+                    if (n) n.style.display = "none";
+                } else {
+                    b.style.borderColor = "#F44336";
+                    b.style.backgroundColor = "#FFEBEE";
+                    i.textContent = "🔴";
+                    t.textContent = statusMsg;
+                    t.style.color = "#C62828";
+                    tm.textContent = nextOpen;
+                    if (n) {
+                        n.style.display = "block";
+                        n.textContent = "💡 Toko sedang tutup. Anda tetap bisa memesan, namun akan kami proses saat toko buka kembali.";
+                    }
+                }
+            };
+
+            updateUI(box, iconEl, titleEl, timeEl, noticeEl);
+            updateUI(box2, iconEl2, titleEl2, timeEl2);
+
+            if (checkoutBtn) {
+                checkoutBtn.style.opacity = "1";
+                checkoutBtn.style.pointerEvents = "auto";
             }
         }
 
@@ -4677,16 +5150,20 @@
         }
 
         function updateQuantity(productId, change) {
-            const item = cart.find(item => item.id === productId);
+            // Find item by ID (handle both string and number)
+            const item = cart.find(item => item.id == productId);
             if (item) {
                 item.quantity += change;
-                if (item.quantity <= 0) removeItem(productId);
-                else updateCart();
+                if (item.quantity <= 0) {
+                    removeItem(productId);
+                } else {
+                    updateCart();
+                }
             }
         }
 
         function removeItem(productId) {
-            cart = cart.filter(item => item.id !== productId);
+            cart = cart.filter(item => item.id != productId);
             updateCart();
         }
 
@@ -4828,51 +5305,6 @@
             heroSlider.addEventListener('mouseleave', startAutoSlide);
         }
 
-        function openPromoModal() {
-            const overlay = document.getElementById('promoModalOverlay');
-            if (overlay) {
-                overlay.style.display = 'flex';
-                document.body.style.overflow = 'hidden';
-                // Reset cart count in modal
-                const promoCartCount = document.getElementById('promoModalCartCount');
-                const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
-                if (promoCartCount) promoCartCount.textContent = totalItems;
-            }
-        }
-
-        function closePromoModal(event) {
-            const overlay = document.getElementById('promoModalOverlay');
-            if (overlay) {
-                overlay.style.display = 'none';
-                document.body.style.overflow = 'auto';
-            }
-        }
-
-        function directBuyPromo(productName, productPrice) {
-            // Find product in our global products array
-            const product = products.find(p => p.name === productName);
-            if (product) {
-                addToCart(product.id);
-                // Notification already handled by addToCart
-            } else {
-                // If not in products list, add manually (fallback)
-                const existing = cart.find(item => item.name === productName);
-                if (existing) {
-                    existing.quantity++;
-                } else {
-                    cart.push({
-                        id: Date.now(), // temporary id
-                        name: productName,
-                        price: productPrice,
-                        quantity: 1,
-                        image: null
-                    });
-                }
-                updateCart();
-                showNotification(`✓ ${productName} ditambahkan ke keranjang!`);
-            }
-        }
-
         window.addEventListener('load', () => {
             showSlide(0);
             startAutoSlide();
@@ -4891,12 +5323,28 @@
             if (navMenu) navMenu.classList.remove('open');
         }
 
-        function goToCheckout(skipToggle = false) {
-            if (cart.length === 0) { 
-                alert('Keranjang Anda masih kosong!'); 
-                return; 
+        function goToCheckout(skipToggle = false, fromBuyNow = false) {
+            if (cart.length === 0) {
+                alert('Keranjang Anda masih kosong!');
+                return;
             }
-            
+
+            // Cek toko tutup HANYA jika dari keranjang (bukan dari buyNow)
+            if (!fromBuyNow && !isShopOpen()) {
+                const nextTime = getNextOpenTime();
+                const message = `Halo! Dapoer Budess sudah tutup saat ini. Pesanan Anda tetap akan kami terima, namun baru akan diproses ${nextTime}.`;
+                
+                showShopClosedModal(message, () => {
+                    proceedToCheckout(skipToggle);
+                });
+                return;
+            }
+
+            // Langsung ke proceedToCheckout
+            proceedToCheckout(skipToggle);
+        }
+
+        function proceedToCheckout(skipToggle = false) {
             // SECURITY: Check max items per order (10 items)
             const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
             if (totalItems > 10) {
@@ -5280,10 +5728,43 @@
 
         function showNotification(message) {
             const n = document.createElement('div');
-            n.style.cssText = 'position:fixed;top:100px;right:20px;background:var(--primary);color:white;padding:1rem 1.5rem;border-radius:10px;box-shadow:0 4px 15px rgba(0,0,0,0.3);z-index:50000;animation:slideInRight 0.4s ease;font-family:Outfit,sans-serif;';
+            n.className = 'custom-notification';
             n.textContent = message;
             document.body.appendChild(n);
-            setTimeout(() => { n.style.animation = 'slideOutRight 0.4s ease'; setTimeout(() => n.remove(), 400); }, 2000);
+            
+            // Trigger animation
+            setTimeout(() => n.classList.add('show'), 10);
+            
+            // Remove after 3 seconds
+            setTimeout(() => {
+                n.classList.remove('show');
+                setTimeout(() => n.remove(), 400);
+            }, 3000);
+        }
+
+        // Shop Closed Modal Functions
+        let shopClosedCallback = null;
+
+        function showShopClosedModal(message, onConfirm) {
+            document.getElementById('shopClosedMessage').textContent = message;
+            document.getElementById('shopClosedModal').classList.add('active');
+            document.getElementById('shopClosedOverlay').classList.add('active');
+            shopClosedCallback = onConfirm;
+        }
+
+        function confirmShopClosedOrder() {
+            document.getElementById('shopClosedModal').classList.remove('active');
+            document.getElementById('shopClosedOverlay').classList.remove('active');
+            if (shopClosedCallback) {
+                shopClosedCallback();
+                shopClosedCallback = null;
+            }
+        }
+
+        function cancelShopClosedConfirm() {
+            document.getElementById('shopClosedModal').classList.remove('active');
+            document.getElementById('shopClosedOverlay').classList.remove('active');
+            shopClosedCallback = null;
         }
 
         function openMessageModal() {
@@ -5349,7 +5830,21 @@
                     document.getElementById('currentChatPhone').textContent = phone;
                     document.getElementById('messageLoginSection').style.display = 'none';
                     document.getElementById('firstMessageSection').style.display = 'none';
-                    fetch('/messages/mark-read', { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content') }, body: JSON.stringify({ phone }) }).catch(e => console.warn(e));
+                    // Mark as read immediately when loading the thread
+                    fetch('/messages/mark-read', { 
+                        method: 'POST', 
+                        headers: { 
+                            'Content-Type': 'application/json', 
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content') 
+                        }, 
+                        body: JSON.stringify({ phone }) 
+                    }).then(() => {
+                        // Reset badge immediately
+                        const badge = document.getElementById('msgBadge');
+                        const pulse = document.getElementById('msgPulse');
+                        if (badge) badge.style.display = 'none';
+                        if (pulse) pulse.style.display = 'none';
+                    }).catch(e => console.warn(e));
                     displayStatusAndChat(data);
                     startMessagePolling();
                 } else { showFirstMessageForm(phone); }
@@ -5622,7 +6117,8 @@
                         // Deteksi jika ada pesan baru dari admin
                         if (currentCount > lastMessageCount && lastMessageCount > 0) {
                             const lastMsg = msgs[msgs.length - 1];
-                            if (lastMsg.sender_type === 'admin') {
+                            const sender = lastMsg.sender || lastMsg.sender_type;
+                            if (sender === 'admin') {
                                 showNewMessageNotification(lastMsg.message.substring(0, 50) + (lastMsg.message.length > 50 ? '...' : ''));
                             }
                         }
@@ -5633,7 +6129,12 @@
                         lastMessageCount = currentCount;
                         if (chatContainer && wasAtBottom) setTimeout(() => { chatContainer.scrollTop = chatContainer.scrollHeight; }, 100);
                     }
-                    await fetch('/messages/mark-read', { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content') }, body: JSON.stringify({ phone: currentPhone }) });
+                    // Mark as read immediately if chat is open
+                    await fetch('/messages/mark-read', { 
+                        method: 'POST', 
+                        headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content') }, 
+                        body: JSON.stringify({ phone: currentPhone }) 
+                    });
                     const badge = document.getElementById('msgBadge');
                     const pulse = document.getElementById('msgPulse');
                     if (badge) badge.style.display = 'none';
@@ -5674,7 +6175,7 @@
 
             // 2. Visual Pop-up in Web Page
             const n = document.createElement('div');
-            n.style.cssText = 'position:fixed;top:100px;right:20px;background:linear-gradient(135deg,#4CAF50,#45a049);color:white;padding:1rem 1.5rem;border-radius:12px;box-shadow:0 8px 25px rgba(76,175,80,0.4);z-index:50000;font-family:Outfit,sans-serif;font-weight:600;display:flex;align-items:center;gap:0.5rem;animation:slideInRight 0.3s ease-out;cursor:pointer;';
+            n.style.cssText = 'position:fixed;top:100px;right:20px;background:linear-gradient(135deg,#4CAF50,#45a049);color:white;padding:1rem 1.5rem;border-radius:12px;box-shadow:0 8px 25px rgba(76,175,80,0.4);z-index:100000;font-family:Outfit,sans-serif;font-weight:600;display:flex;align-items:center;gap:0.5rem;animation:slideInRight 0.3s ease-out;cursor:pointer;';
             n.innerHTML = `💬 ${messageText}`;
             n.onclick = () => { openMessageModal(); n.remove(); stopTitleFlash(); };
             document.body.appendChild(n);
@@ -5718,16 +6219,62 @@
 
         /* PROMO MODAL FUNCTIONS */
         function openPromoModal() {
-            document.getElementById('promoModalOverlay').classList.add('active');
-            document.body.style.overflow = 'hidden'; // Prevent scroll
+            const overlay = document.getElementById('promoModalOverlay');
+            if (overlay) {
+                overlay.classList.add('active');
+                document.body.style.overflow = 'hidden';
+                
+                // Sync cart count in modal
+                const promoCartCount = document.getElementById('promoModalCartCount');
+                if (promoCartCount) {
+                    const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+                    promoCartCount.textContent = totalItems;
+                }
+            }
         }
 
         function closePromoModal(event) {
-            document.getElementById('promoModalOverlay').classList.remove('active');
-            document.body.style.overflow = ''; // Restore scroll
+            if (event && event.stopPropagation) event.stopPropagation();
+            const overlay = document.getElementById('promoModalOverlay');
+            if (overlay) {
+                overlay.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        }
+        
+        function finishPromoShopping(event) {
+            if (event && event.stopPropagation) event.stopPropagation();
+            
+            // Cek apakah ada produk di cart
+            if (cart.length === 0) {
+                showNotification('⚠️ Keranjang masih kosong. Pilih produk terlebih dahulu!');
+                return;
+            }
+            
+            // Tutup modal promo
+            const overlay = document.getElementById('promoModalOverlay');
+            if (overlay) {
+                overlay.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+            
+            // Cek jam operasional sebelum ke checkout
+            if (!isShopOpen()) {
+                const nextTime = getNextOpenTime();
+                const message = `Halo! Dapoer Budess sudah tutup saat ini. Pesanan Anda tetap akan kami terima, namun baru akan diproses ${nextTime}.`;
+                
+                showShopClosedModal(message, () => {
+                    // Lanjut ke checkout setelah konfirmasi
+                    goToCheckout(true, true);
+                });
+                return;
+            }
+            
+            // Langsung ke checkout
+            goToCheckout(true, true);
         }
 
-        function directBuyPromo(productName, price) {
+        function directBuyPromo(productName, price, imagePath = null) {
             // Normalize name: remove multiple spaces and trim
             const normalize = (str) => str.toLowerCase().replace(/\s+/g, ' ').trim();
             const normalizedTarget = normalize(productName);
@@ -5735,44 +6282,66 @@
             // Find product in products array with normalized matching
             const product = products.find(p => normalize(p.name) === normalizedTarget);
             
+            let finalProduct = null;
             if (!product) {
-                // If not found in main products, create a temporary item
-                const tempProduct = {
+                // If not found in main products, set as a temporary promo product
+                finalProduct = {
                     id: 'promo-' + Date.now(),
                     name: productName,
                     price: price,
                     effective_price: price,
-                    image: null,
+                    image: imagePath,
+                    isPromo: true,
                     is_discount_active: false
                 };
-                
-                const existingItem = cart.find(item => item.name === productName);
-                if (existingItem) {
-                    existingItem.quantity++;
-                } else {
-                    cart.push({ ...tempProduct, quantity: 1 });
-                }
             } else {
-                const existingItem = cart.find(item => item.id === product.id);
-                if (existingItem) {
-                    existingItem.quantity++;
-                } else {
-                    cart.push({ 
-                        ...product, 
-                        quantity: 1, 
-                        price: product.effective_price, 
-                        original_price: product.price, 
-                        is_discounted: product.is_discount_active, 
-                        is_preorder: false 
-                    });
-                }
+                // If found, use the actual product info but ensure promo price is used
+                finalProduct = {
+                    ...product,
+                    price: price, 
+                    effective_price: price,
+                    image: product.image || imagePath,
+                    isPromo: true
+                };
             }
             
+            // LANGSUNG KE CHECKOUT (tidak masuk keranjang)
+            // Buat temporary cart dengan 1 produk ini saja
+            cart = [{ 
+                ...finalProduct, 
+                quantity: 1, 
+                original_price: finalProduct.price,
+                is_discounted: true,
+                is_preorder: false 
+            }];
+            
             updateCart();
-            // Jangan tutup modal dan jangan buka cart otomatis
-            // closePromoModal();
-            // toggleCart();
-            showNotification(`✅ ${productName} ditambahkan ke keranjang!`);
+            
+            // Tutup modal promo
+            closePromoModal();
+            
+            // Cek jam operasional sebelum ke checkout
+            if (!isShopOpen()) {
+                const nextTime = getNextOpenTime();
+                const message = `Halo! Dapoer Budess sudah tutup saat ini. Pesanan Anda tetap akan kami terima, namun baru akan diproses ${nextTime}.`;
+                
+                showShopClosedModal(message, () => {
+                    // Lanjut ke checkout setelah konfirmasi
+                    goToCheckout(true, true);
+                });
+                return;
+            }
+            
+            // Langsung ke checkout
+            goToCheckout(true, true);
+        }
+        
+        function updatePromoModalCartCount() {
+            const countEl = document.getElementById('promoModalCartCount');
+            if (countEl) {
+                const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+                countEl.textContent = totalItems;
+            }
         }
 
         function toggleMenu() {

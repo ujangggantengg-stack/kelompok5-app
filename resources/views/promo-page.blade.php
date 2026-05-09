@@ -325,7 +325,7 @@
                     <p class="status-text">✨ Fresh setiap hari!</p>
 
                     <button class="btn-buy">
-                        <i class="fas fa-shopping-cart"></i> Beli
+                        <i class="promo-buy-btn"></i> Beli
                     </button>
                 </div>
             </div>
