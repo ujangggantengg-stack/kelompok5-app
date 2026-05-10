@@ -29,17 +29,9 @@ class ProfileController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:customers,email,' . $customer->id,
-            'phone' => 'nullable|string|max:20',
-            'address' => 'nullable|string',
-            'city' => 'nullable|string|max:100',
-            'province' => 'nullable|string|max:100',
-            'postal_code' => 'nullable|string|max:10',
         ]);
 
-        $customer->update($request->only([
-            'name', 'email', 'phone', 'address', 
-            'city', 'province', 'postal_code'
-        ]));
+        $customer->update($request->only(['name', 'email']));
 
         return back()->with('success', 'Profile berhasil diperbarui!');
     }

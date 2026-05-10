@@ -245,37 +245,43 @@
 
         .cart-count {
             position: absolute;
-            top: -12px;
+            top: -122px;
             right: -12px;
             background: linear-gradient(135deg, #FF1744 0%, #D50000 100%);
-            color: #FFFFFF;
-            min-width: 32px;
-            height: 32px;
-            padding: 0 10px;
-            border-radius: 16px;
+            color: rgb(12, 202, 6);
+            min-width: 36px;
+            height: 36px;
+            padding: 0 12px;
+            border-radius: 18px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1rem;
+            font-size: 1.1rem;
             font-weight: 900;
             border: 4px solid #FFFFFF;
-            box-shadow: 0 4px 16px rgba(255, 23, 68, 0.6), 
-                        0 2px 8px rgba(0, 0, 0, 0.3),
-                        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+            box-shadow: 
+                0 0 0 2px #FF1744,
+                0 4px 16px rgba(255, 23, 68, 0.8), 
+                0 2px 8px rgba(0, 0, 0, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.4);
             z-index: 100;
             transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             pointer-events: none;
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', sans-serif;
-            letter-spacing: 0;
-            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+            letter-spacing: 0.5px;
+            text-shadow: 
+                0 2px 4px rgba(0, 0, 0, 0.5),
+                0 1px 2px rgba(0, 0, 0, 0.8);
             line-height: 1;
         }
 
         .cart-btn:hover .cart-count {
             transform: scale(1.15);
-            box-shadow: 0 6px 20px rgba(255, 23, 68, 0.7), 
-                        0 3px 10px rgba(0, 0, 0, 0.4),
-                        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+            box-shadow: 
+                0 0 0 2px #FF1744,
+                0 6px 20px rgba(255, 23, 68, 0.9), 
+                0 3px 10px rgba(0, 0, 0, 0.5),
+                inset 0 1px 0 rgba(255, 255, 255, 0.4);
         }
         
         /* Mobile optimization */
@@ -283,10 +289,14 @@
             .cart-count {
                 top: -10px;
                 right: -10px;
-                min-width: 28px;
-                height: 28px;
-                font-size: 0.95rem;
+                min-width: 32px;
+                height: 32px;
+                font-size: 1.05rem;
                 border: 3px solid #FFFFFF;
+                box-shadow: 
+                    0 0 0 2px #FF1744,
+                    0 4px 12px rgba(255, 23, 68, 0.8),
+                    0 2px 6px rgba(0, 0, 0, 0.4);
             }
         }
 
@@ -1650,6 +1660,66 @@
             flex-shrink: 0;
         }
 
+        /* Icon Keranjang di Pojok Kanan Atas */
+        .product-cart-icon {
+            position: absolute;
+            top: 0.75rem;
+            right: 0.75rem;
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, #FFFBF0 0%, #FFF8E7 100%);
+            border: 2.5px solid #D4AF37;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 
+                0 4px 15px rgba(212, 175, 55, 0.3),
+                0 2px 8px rgba(0, 0, 0, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.8);
+            cursor: pointer;
+            z-index: 10;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            font-size: 1.4rem;
+        }
+
+        .product-cart-icon:hover {
+            background: linear-gradient(135deg, #D4AF37 0%, #E6C200 100%);
+            border-color: #FFD700;
+            transform: scale(1.15) rotate(5deg);
+            box-shadow: 
+                0 8px 25px rgba(212, 175, 55, 0.5),
+                0 4px 12px rgba(0, 0, 0, 0.15),
+                inset 0 1px 0 rgba(255, 255, 255, 0.9);
+        }
+
+        .product-cart-icon:active {
+            transform: scale(1.05) rotate(0deg);
+            box-shadow: 
+                0 2px 8px rgba(212, 175, 55, 0.4),
+                inset 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Animasi pulse untuk menarik perhatian */
+        @keyframes cartPulse {
+            0%, 100% { 
+                transform: scale(1);
+                box-shadow: 
+                    0 4px 15px rgba(212, 175, 55, 0.3),
+                    0 2px 8px rgba(0, 0, 0, 0.1);
+            }
+            50% { 
+                transform: scale(1.08);
+                box-shadow: 
+                    0 6px 20px rgba(212, 175, 55, 0.4),
+                    0 3px 10px rgba(0, 0, 0, 0.12);
+            }
+        }
+
+        .product-card:hover .product-cart-icon {
+            animation: cartPulse 2s ease-in-out infinite;
+        }
+
         .quick-add-btn {
             position: absolute;
             top: 1rem;
@@ -2924,26 +2994,41 @@
             position: absolute;
             top: 15px;
             right: 15px;
-            width: 42px;
-            height: 42px;
-            background: white !important;
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, #FFFBF0 0%, #FFF8E7 100%) !important;
+            border: 2.5px solid #D4AF37;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+            box-shadow: 
+                0 4px 15px rgba(212, 175, 55, 0.3),
+                0 2px 8px rgba(0, 0, 0, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.8);
             cursor: pointer;
             z-index: 20;
-            transition: all 0.3s ease;
-            font-size: 1.1rem;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            font-size: 1.4rem;
             color: #3B1F0A;
-            border: none;
         }
 
         .promo-quick-add:hover {
-            background: #3B1F0A !important;
+            background: linear-gradient(135deg, #D4AF37 0%, #E6C200 100%) !important;
+            border-color: #FFD700;
             color: white !important;
-            transform: scale(1.1);
+            transform: scale(1.15) rotate(5deg);
+            box-shadow: 
+                0 8px 25px rgba(212, 175, 55, 0.5),
+                0 4px 12px rgba(0, 0, 0, 0.15),
+                inset 0 1px 0 rgba(255, 255, 255, 0.9);
+        }
+
+        .promo-quick-add:active {
+            transform: scale(1.05) rotate(0deg);
+            box-shadow: 
+                0 2px 8px rgba(212, 175, 55, 0.4),
+                inset 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
         .promo-product-body {
@@ -3063,6 +3148,16 @@
             }
             .promo-modal-scrollable {
                 padding: 30px 20px;
+            }
+
+            /* Icon Keranjang Modal Promo - Mobile */
+            .promo-quick-add {
+                width: 42px !important;
+                height: 42px !important;
+                font-size: 1.25rem !important;
+                top: 12px !important;
+                right: 12px !important;
+                border-width: 2px !important;
             }
         }
         
@@ -3315,6 +3410,17 @@
             .product-name { font-size: 1.1rem; }
             .product-description { font-size: 0.85rem; }
             .price-new { font-size: 1.1rem; }
+
+            /* Icon Keranjang Mobile - Lebih kecil tapi tetap jelas */
+            .product-cart-icon {
+                width: 42px !important;
+                height: 42px !important;
+                font-size: 1.25rem !important;
+                top: 0.6rem !important;
+                right: 0.6rem !important;
+                border-width: 2px !important;
+            }
+
             .cta-button { 
                 padding: 0.5rem 0.875rem; 
                 font-size: 0.8rem; 
@@ -3344,6 +3450,20 @@
             transform: translateX(400px);
             transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
             pointer-events: none;
+        }
+
+        .custom-notification.success {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            box-shadow: 
+                0 8px 24px rgba(16, 185, 129, 0.3),
+                0 4px 8px rgba(5, 150, 105, 0.2);
+        }
+
+        .custom-notification.error {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            box-shadow: 
+                0 8px 24px rgba(239, 68, 68, 0.3),
+                0 4px 8px rgba(220, 38, 38, 0.2);
         }
 
         .custom-notification.show {
@@ -3901,7 +4021,7 @@
                                 @if($p->badge)
                                     <span class="promo-product-badge">{{ $p->badge }}</span>
                                 @endif
-                                <div class="promo-quick-add" onclick="directBuyPromo('{{ $p->name }}', {{ (int)$p->price_promo }}, '{{ $p->image ? '/' . $p->image : '' }}')" title="Tambah ke Keranjang">🛒</div>
+                                <div class="promo-quick-add" onclick="quickAddPromoToCart('{{ $p->name }}', {{ (int)$p->price_promo }}, '{{ $p->image ? '/' . $p->image : '' }}')" title="Tambah ke Keranjang">🛒</div>
                                 <img src="{{ $p->image ? '/' . $p->image : 'https://images.unsplash.com/photo-1509440159596-0249088772ff?w=500&h=500&fit=crop' }}" class="promo-product-img" alt="{{ $p->name }}">
                             </div>
                             <div class="promo-product-body">
@@ -4732,6 +4852,9 @@
                     <div class="product-card" data-category="${product.category}" data-product-id="${product.id}">
                         ${badgeText ? `<div class="product-promo-badge">${badgeText}</div>` : ''}
                         <div class="product-image-wrapper">
+                            <div class="product-cart-icon" onclick="quickAddToCart(${product.id}, ${!!stockStatus.is_preorder})" title="Tambah ke Keranjang">
+                                🛒
+                            </div>
                             <div class="product-image">
                                 ${product.image ? `<img src="${product.image}" alt="${name}" class="product-image" style="width:100%;height:100%;object-fit:cover;">` : `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:#ccc;font-size:3rem;">🍞</div>`}
                             </div>
@@ -4783,6 +4906,47 @@
             // Untuk instant order, tampilkan modal dengan 2 pilihan
             window.selectedProduct = { id: productId, name: product.name, price: product.effective_price, isPreorder: false };
             showPurchaseModal();
+        }
+
+        // Quick Add to Cart - Langsung tambah ke keranjang dari icon
+        function quickAddToCart(productId, isPreorder = false) {
+            const product = products.find(p => p.id === productId);
+            if (!product || !product.stock_status || !product.stock_status.can_order) {
+                showNotification('❌ Maaf, produk ini tidak tersedia saat ini', 'error');
+                return;
+            }
+
+            // Jika pre-order, redirect ke halaman pre-order
+            if (isPreorder) {
+                const cart = [{
+                    id: productId,
+                    name: product.name,
+                    price: product.effective_price,
+                    quantity: 1
+                }];
+                localStorage.setItem('cart', JSON.stringify(cart));
+                window.location.href = '/preorder';
+                return;
+            }
+
+            // Langsung tambah ke keranjang
+            const existingItem = cart.find(item => item.id === product.id);
+            
+            if (existingItem) {
+                existingItem.quantity++;
+            } else {
+                cart.push({ 
+                    ...product, 
+                    quantity: 1, 
+                    price: product.effective_price || product.price, 
+                    original_price: product.price, 
+                    is_discounted: product.is_discount_active || false, 
+                    is_preorder: isPreorder 
+                });
+            }
+            
+            updateCart();
+            showNotification(`✅ ${product.name} ditambahkan ke keranjang!`, 'success');
         }
 
         function showPurchaseModal() {
@@ -5726,9 +5890,9 @@
             showSection('home');
         }
 
-        function showNotification(message) {
+        function showNotification(message, type = 'success') {
             const n = document.createElement('div');
-            n.className = 'custom-notification';
+            n.className = `custom-notification ${type}`;
             n.textContent = message;
             document.body.appendChild(n);
             
@@ -6334,6 +6498,64 @@
             
             // Langsung ke checkout
             goToCheckout(true, true);
+        }
+
+        // Quick Add Promo to Cart - Langsung tambah ke keranjang dari icon di modal promo
+        function quickAddPromoToCart(productName, price, imagePath = null) {
+            // Normalize name: remove multiple spaces and trim
+            const normalize = (str) => str.toLowerCase().replace(/\s+/g, ' ').trim();
+            const normalizedTarget = normalize(productName);
+            
+            // Find product in products array with normalized matching
+            const product = products.find(p => normalize(p.name) === normalizedTarget);
+            
+            let finalProduct = null;
+            if (!product) {
+                // If not found in main products, set as a temporary promo product
+                finalProduct = {
+                    id: 'promo-' + Date.now(),
+                    name: productName,
+                    price: price,
+                    effective_price: price,
+                    image: imagePath,
+                    isPromo: true,
+                    is_discount_active: false
+                };
+            } else {
+                // If found, use the actual product info but ensure promo price is used
+                finalProduct = {
+                    ...product,
+                    price: price, 
+                    effective_price: price,
+                    image: product.image || imagePath,
+                    isPromo: true
+                };
+            }
+            
+            // Langsung tambah ke keranjang (tidak checkout)
+            const existingItem = cart.find(item => {
+                if (item.id === finalProduct.id) return true;
+                if (typeof item.id === 'string' && item.id.startsWith('promo-') && 
+                    typeof finalProduct.id === 'string' && finalProduct.id.startsWith('promo-')) {
+                    return normalize(item.name) === normalize(finalProduct.name);
+                }
+                return false;
+            });
+            
+            if (existingItem) {
+                existingItem.quantity++;
+            } else {
+                cart.push({ 
+                    ...finalProduct, 
+                    quantity: 1, 
+                    original_price: finalProduct.price,
+                    is_discounted: true,
+                    is_preorder: false 
+                });
+            }
+            
+            updateCart();
+            showNotification(`✅ ${finalProduct.name} ditambahkan ke keranjang!`, 'success');
         }
         
         function updatePromoModalCartCount() {

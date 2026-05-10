@@ -129,4 +129,26 @@ class Product extends Model
     {
         return $this->hasMany(OrderItem::class);
     }
+
+    /**
+     * Get image URL with fallback
+     */
+    public function getImageUrlAttribute()
+    {
+        if ($this->image) {
+            // If image starts with http/https, return as is
+            if (str_starts_with($this->image, 'http')) {
+                return $this->image;
+            }
+            // If image starts with /, return as is
+            if (str_starts_with($this->image, '/')) {
+                return $this->image;
+            }
+            // Otherwise prepend /
+            return '/' . $this->image;
+        }
+        
+        // Default fallback image
+        return '/images/default-product.jpg';
+    }
 }

@@ -466,6 +466,7 @@ class AdminController extends Controller
             $subtotal = $item['price'] * $item['quantity'];
             OrderItem::create([
                 'order_id' => $order->id,
+                'product_id' => $item['product_id'] ?? null, // Tambah ini agar gambar muncul
                 'product_name' => $item['product_name'],
                 'price' => $item['price'],
                 'quantity' => $item['quantity'],

@@ -449,7 +449,7 @@
                     <span>🕐</span>
                     <span>Jam Operasional</span>
                 </a>
-                <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                <a href="#" onclick="event.preventDefault(); confirmLogout();">
                     <span>👋</span>
                     <span>Keluar</span>
                 </a>
@@ -458,6 +458,23 @@
                 </form>
             </nav>
         </div>
+        
+        <script>
+        function confirmLogout() {
+            if (confirm('Yakin ingin keluar?')) {
+                // Get fresh CSRF token
+                fetch('/admin/dashboard', {
+                    method: 'GET',
+                    credentials: 'same-origin'
+                }).then(() => {
+                    document.getElementById('logout-form').submit();
+                }).catch(() => {
+                    // Fallback: redirect to login
+                    window.location.href = '/admin/login';
+                });
+            }
+        }
+        </script>
         
         <!-- Main Content -->
         <div class="admin-main">

@@ -128,13 +128,21 @@
             border: 1px solid #e0e0e0;
             border-radius: 8px;
             overflow: hidden;
+            max-height: 600px;
+            overflow-y: auto;
         }
 
         .order-item {
             display: flex;
+            align-items: center;
             gap: 16px;
             padding: 16px;
             border-bottom: 1px solid #f0f0f0;
+            transition: background 0.2s;
+        }
+
+        .order-item:hover {
+            background: #fafafa;
         }
 
         .order-item:last-child {
@@ -144,19 +152,25 @@
         .item-image {
             width: 80px;
             height: 80px;
+            min-width: 80px;
             border-radius: 8px;
             object-fit: cover;
             background: #f5f5f5;
+            border: 2px solid #e0e0e0;
         }
 
         .item-details {
             flex: 1;
+            min-width: 0;
         }
 
         .item-name {
             font-weight: 600;
             color: #333;
             margin-bottom: 6px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }
 
         .item-quantity {
@@ -168,6 +182,7 @@
             font-weight: 600;
             color: #FF6B35;
             font-size: 16px;
+            white-space: nowrap;
         }
 
         .summary {
@@ -193,6 +208,10 @@
         }
 
         @media (max-width: 768px) {
+            .container {
+                padding: 12px;
+            }
+
             .order-detail {
                 padding: 20px;
             }
@@ -203,17 +222,54 @@
                 gap: 12px;
             }
 
+            .order-title {
+                font-size: 20px;
+            }
+
             .info-grid {
                 grid-template-columns: 1fr;
+                gap: 12px;
+            }
+
+            .order-items {
+                max-height: 500px;
             }
 
             .order-item {
-                flex-direction: column;
+                padding: 12px;
+                gap: 12px;
             }
 
             .item-image {
-                width: 100%;
-                height: 200px;
+                width: 70px;
+                height: 70px;
+                min-width: 70px;
+            }
+
+            .item-name {
+                font-size: 14px;
+                white-space: normal;
+                line-height: 1.4;
+            }
+
+            .item-quantity {
+                font-size: 13px;
+            }
+
+            .item-price {
+                font-size: 15px;
+            }
+
+            .summary {
+                padding: 16px;
+            }
+
+            .summary-row {
+                font-size: 14px;
+            }
+
+            .summary-row.total {
+                font-size: 16px;
             }
         }
     </style>
@@ -261,13 +317,15 @@
             </div>
 
             <!-- Shipping Address -->
+            @if($order->customer_address)
             <div class="section">
                 <h2 class="section-title">Alamat Pengiriman</h2>
                 <div class="info-value">
-                    {{ $order->shipping_address }}<br>
-                    {{ $order->shipping_city }}, {{ $order->shipping_province }}
+                    {{ $order->customer_address }}
+                    @if($order->city), {{ $order->city }}@endif
                 </div>
             </div>
+            @endif
 
             <!-- Order Items -->
             <div class="section">
@@ -275,12 +333,36 @@
                 <div class="order-items">
                     @foreach($order->items as $item)
                         <div class="order-item">
-                            <img src="{{ $item->product->image ?? '/images/placeholder.jpg' }}" 
+                            @php
+                                $imageUrl = '/images/rooti.jpg'; // Default fallback
+                                $debugInfo = 'Using fallback';
+                                
+                                if ($item->product_id) {
+                                    if ($item->product) {
+                                        if ($item->product->image) {
+                                            $imageUrl = $item->product->image_url;
+                                            $debugInfo = 'Product image: ' . $item->product->image;
+                                        } else {
+                                            $debugInfo = 'Product exists but no image';
+                                        }
+                                    } else {
+                                        $debugInfo = 'Product ID: ' . $item->product_id . ' but product not found (deleted?)';
+                                    }
+                                } else {
+                                    $debugInfo = 'No product_id in order item';
+                                }
+                            @endphp
+                            <img src="{{ $imageUrl }}" 
                                  alt="{{ $item->product_name }}" 
-                                 class="item-image">
+                                 class="item-image"
+                                 title="{{ $debugInfo }}"
+                                 onerror="this.src='/images/rooti.jpg'; console.log('Image load error: {{ $debugInfo }}');">
                             <div class="item-details">
                                 <div class="item-name">{{ $item->product_name }}</div>
                                 <div class="item-quantity">{{ $item->quantity }} x Rp {{ number_format($item->price, 0, ',', '.') }}</div>
+                                @if(config('app.debug'))
+                                <div style="font-size: 11px; color: #999; margin-top: 4px;">{{ $debugInfo }}</div>
+                                @endif
                             </div>
                             <div class="item-price">
                                 Rp {{ number_format($item->quantity * $item->price, 0, ',', '.') }}
@@ -296,15 +378,23 @@
                 <div class="summary">
                     <div class="summary-row">
                         <span>Subtotal Produk</span>
-                        <span>Rp {{ number_format($order->subtotal, 0, ',', '.') }}</span>
+                        <span>Rp {{ number_format($order->items->sum(function($item) { return $item->price * $item->quantity; }), 0, ',', '.') }}</span>
                     </div>
+                    @if($order->shipping_cost > 0)
                     <div class="summary-row">
                         <span>Ongkos Kirim</span>
                         <span>Rp {{ number_format($order->shipping_cost, 0, ',', '.') }}</span>
                     </div>
+                    @endif
+                    @if($order->discount_amount > 0)
+                    <div class="summary-row" style="color: #4CAF50;">
+                        <span>Diskon</span>
+                        <span>- Rp {{ number_format($order->discount_amount, 0, ',', '.') }}</span>
+                    </div>
+                    @endif
                     <div class="summary-row total">
                         <span>Total Pembayaran</span>
-                        <span>Rp {{ number_format($order->total_amount, 0, ',', '.') }}</span>
+                        <span>Rp {{ number_format($order->final_total, 0, ',', '.') }}</span>
                     </div>
                 </div>
             </div>

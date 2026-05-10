@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profile - Toko Roti</title>
+    <title>Profile </title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
@@ -69,6 +69,40 @@
                 <div class="bg-white rounded-xl shadow-md p-6">
                     <h3 class="text-xl font-bold text-gray-800 mb-6">Informasi Profile</h3>
                     
+                    <!-- Upload Avatar -->
+                    <form method="POST" action="{{ route('customer.profile.avatar') }}" enctype="multipart/form-data" class="mb-6">
+                        @csrf
+                        <div class="flex items-center gap-6">
+                            <div class="relative">
+                                <img id="avatarPreview" 
+                                     src="{{ $customer->avatar_url }}" 
+                                     alt="{{ $customer->name }}" 
+                                     class="w-24 h-24 rounded-full border-4 border-orange-100 object-cover">
+                                <label for="avatarInput" 
+                                       class="absolute bottom-0 right-0 bg-orange-500 text-white w-8 h-8 rounded-full flex items-center justify-center cursor-pointer hover:bg-orange-600 transition">
+                                    <i class="fas fa-camera text-sm"></i>
+                                </label>
+                                <input type="file" 
+                                       id="avatarInput" 
+                                       name="avatar" 
+                                       accept="image/*" 
+                                       class="hidden"
+                                       onchange="previewAvatar(this)">
+                            </div>
+                            <div class="flex-1">
+                                <p class="text-sm text-gray-600 mb-2">Upload foto profile Anda</p>
+                                <p class="text-xs text-gray-500">Format: JPG, PNG (Max 2MB)</p>
+                                <button type="submit" 
+                                        id="uploadBtn"
+                                        class="mt-2 bg-orange-500 text-white px-4 py-1.5 rounded-lg hover:bg-orange-600 transition text-sm hidden">
+                                    <i class="fas fa-upload mr-1"></i>Upload
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+
+                    <hr class="my-6 border-gray-200">
+
                     <form method="POST" action="{{ route('customer.profile.update') }}">
                         @csrf
                         @method('PUT')
@@ -84,24 +118,6 @@
                                 <label class="block text-sm font-medium text-gray-700 mb-2">Email</label>
                                 <input type="email" name="email" value="{{ $customer->email }}" required
                                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500">
-                            </div>
-
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Nomor HP</label>
-                                <input type="tel" name="phone" value="{{ $customer->phone }}"
-                                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500">
-                            </div>
-
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Kota</label>
-                                <input type="text" name="city" value="{{ $customer->city }}"
-                                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500">
-                            </div>
-
-                            <div class="md:col-span-2">
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Alamat</label>
-                                <textarea name="address" rows="3"
-                                          class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500">{{ $customer->address }}</textarea>
                             </div>
                         </div>
 
@@ -153,5 +169,20 @@
             </div>
         </div>
     </div>
+
+    <script>
+        function previewAvatar(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                
+                reader.onload = function(e) {
+                    document.getElementById('avatarPreview').src = e.target.result;
+                    document.getElementById('uploadBtn').classList.remove('hidden');
+                }
+                
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+    </script>
 </body>
 </html>

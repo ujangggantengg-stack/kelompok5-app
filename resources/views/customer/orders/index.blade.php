@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pesanan Saya - Warmer Bakery</title>
+    <title>Pesanan Saya - Dapoer Budess</title>
     <link rel="stylesheet" href="/css/customer-profile.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
@@ -92,12 +92,36 @@
 
                             @foreach($order->items as $item)
                             <div class="order-items">
-                                <img src="{{ $item->product->image_url ?? '/images/default-product.jpg' }}" 
+                                @php
+                                    $imageUrl = '/images/roti.jpg'; // Default fallback
+                                    $debugInfo = 'Using fallback';
+                                    
+                                    if ($item->product_id) {
+                                        if ($item->product) {
+                                            if ($item->product->image) {
+                                                $imageUrl = $item->product->image_url;
+                                                $debugInfo = 'Product image: ' . $item->product->image;
+                                            } else {
+                                                $debugInfo = 'Product exists but no image';
+                                            }
+                                        } else {
+                                            $debugInfo = 'Product ID: ' . $item->product_id . ' but product not found';
+                                        }
+                                    } else {
+                                        $debugInfo = 'No product_id';
+                                    }
+                                @endphp
+                                <img src="{{ $imageUrl }}" 
                                      alt="{{ $item->product_name }}" 
-                                     class="order-item-image">
+                                     class="order-item-image"
+                                     title="{{ $debugInfo }}"
+                                     onerror="this.src='/images/rooti.jpg'">
                                 <div class="order-item-info">
                                     <div class="order-item-name">{{ $item->product_name }}</div>
                                     <div class="order-item-qty">{{ $item->quantity }} x Rp {{ number_format($item->price, 0, ',', '.') }}</div>
+                                    @if(config('app.debug'))
+                                    <div style="font-size: 10px; color: #999;">{{ $debugInfo }}</div>
+                                    @endif
                                 </div>
                                 <div class="order-item-price">
                                     Rp {{ number_format($item->price * $item->quantity, 0, ',', '.') }}
@@ -105,9 +129,27 @@
                             </div>
                             @endforeach
 
-                            <div class="order-total">
-                                <span>Total Pesanan:</span>
-                                <span>Rp {{ number_format($order->total_amount, 0, ',', '.') }}</span>
+                            <div class="order-summary">
+                                <div class="order-summary-row">
+                                    <span>Subtotal Produk:</span>
+                                    <span>Rp {{ number_format($order->items->sum(function($item) { return $item->price * $item->quantity; }), 0, ',', '.') }}</span>
+                                </div>
+                                @if($order->shipping_cost > 0)
+                                <div class="order-summary-row">
+                                    <span>Ongkos Kirim:</span>
+                                    <span>Rp {{ number_format($order->shipping_cost, 0, ',', '.') }}</span>
+                                </div>
+                                @endif
+                                @if($order->discount_amount > 0)
+                                <div class="order-summary-row discount">
+                                    <span>Diskon:</span>
+                                    <span>- Rp {{ number_format($order->discount_amount, 0, ',', '.') }}</span>
+                                </div>
+                                @endif
+                                <div class="order-total">
+                                    <span>Total Pembayaran:</span>
+                                    <span>Rp {{ number_format($order->final_total, 0, ',', '.') }}</span>
+                                </div>
                             </div>
 
                             <div style="margin-top: 1rem;">
