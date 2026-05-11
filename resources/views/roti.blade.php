@@ -3703,7 +3703,7 @@
         </ul>
 
        <div class="header-actions">
-    <button class="cart-btn" onclick="toggleCart()" style="position: relative;">
+    <button class="cart-btn" onclick="toggleCart()" style="position: relative; overflow: visible;">
         <span class="btn-icon">🛒</span>
         <span class="btn-text">Keranjang</span>
         <span class="cart-count" id="cartCount">0</span>
