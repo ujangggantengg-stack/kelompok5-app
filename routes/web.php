@@ -16,9 +16,9 @@ use Illuminate\Support\Facades\Artisan;
 Route::get('/migrate-db', function() {
     try {
         Artisan::call('migrate:fresh', ['--force' => true, '--seed' => true]);
-        return 'Database migrated and seeded successfully!';
-    } catch (\Throwable $e) {
-        return 'Error: ' . $e->getMessage() . ' di baris ' . $e->getLine() . ' file ' . $e->getFile();
+        return response()->json(['message' => 'Database migrated and seeded successfully!']);
+    } catch (\Exception $e) {
+        return response()->json(['error' => $e->getMessage()], 500);
     }
 });
 
