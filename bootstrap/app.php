@@ -33,7 +33,23 @@ $app = Application::configure(basePath: dirname(__DIR__))
     })->create();
 
 if (isset($_SERVER['VERCEL_URL']) || isset($_ENV['VERCEL_URL'])) {
-    $app->useStoragePath('/tmp/storage');
+    $_ENV['APP_STORAGE'] = '/tmp/storage';
+    $app->useStoragePath($_ENV['APP_STORAGE']);
+
+    // Pastikan folder yang dibutuhkan Laravel tersedia di /tmp Vercel
+    $dirs = [
+        $_ENV['APP_STORAGE'] . '/app',
+        $_ENV['APP_STORAGE'] . '/framework/cache/data',
+        $_ENV['APP_STORAGE'] . '/framework/sessions',
+        $_ENV['APP_STORAGE'] . '/framework/testing',
+        $_ENV['APP_STORAGE'] . '/framework/views',
+        $_ENV['APP_STORAGE'] . '/logs',
+    ];
+    foreach ($dirs as $dir) {
+        if (!is_dir($dir)) {
+            mkdir($dir, 0777, true);
+        }
+    }
 }
 
 return $app;
