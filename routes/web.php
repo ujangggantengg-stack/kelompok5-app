@@ -12,11 +12,22 @@ use App\Http\Controllers\ReportController;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Artisan;
 
+use Illuminate\Support\Facades\DB;
+
 // Temporary route to migrate database on Vercel
 Route::get('/migrate-db', function() {
     try {
-        Artisan::call('migrate:fresh', ['--force' => true, '--seed' => true]);
-        return response()->json(['message' => 'Database migrated and seeded successfully!']);
+        // Drop all tables manually to bypass Supabase schema drop permission issue
+        DB::statement("DO $$ DECLARE
+            r RECORD;
+        BEGIN
+            FOR r IN (SELECT tablename FROM pg_tables WHERE schemaname = current_schema()) LOOP
+                EXECUTE 'DROP TABLE IF EXISTS ' || quote_ident(r.tablename) || ' CASCADE';
+            END LOOP;
+        END $$;");
+        
+        Artisan::call('migrate', ['--force' => true, '--seed' => true]);
+        return response()->json(['message' => 'Database dropped, migrated, and seeded successfully!']);
     } catch (\Exception $e) {
         return response()->json(['error' => $e->getMessage()], 500);
     }
