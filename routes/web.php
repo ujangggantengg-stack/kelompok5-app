@@ -17,8 +17,8 @@ Route::get('/migrate-db', function() {
     try {
         Artisan::call('migrate:fresh', ['--force' => true, '--seed' => true]);
         return 'Database migrated and seeded successfully!';
-    } catch (\Exception $e) {
-        return 'Error: ' . $e->getMessage();
+    } catch (\Throwable $e) {
+        return 'Error: ' . $e->getMessage() . ' di baris ' . $e->getLine() . ' file ' . $e->getFile();
     }
 });
 
