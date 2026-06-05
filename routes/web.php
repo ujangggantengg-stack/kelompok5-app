@@ -10,8 +10,17 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\RevenueController;
 use App\Http\Controllers\ReportController;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\Artisan;
 
-/*
+// Temporary route to migrate database on Vercel
+Route::get('/migrate-db', function() {
+    try {
+        Artisan::call('migrate:fresh', ['--force' => true, '--seed' => true]);
+        return 'Database migrated and seeded successfully!';
+    } catch (\Exception $e) {
+        return 'Error: ' . $e->getMessage();
+    }
+});
 |--------------------------------------------------------------------------
 | CUSTOMER AUTHENTICATION
 |--------------------------------------------------------------------------
