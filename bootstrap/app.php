@@ -43,6 +43,12 @@ if (!is_writable(dirname(__DIR__) . '/storage')) {
     $_ENV['APP_STORAGE'] = '/tmp/storage';
     $app->useStoragePath($_ENV['APP_STORAGE']);
 
+    // Pindahkan lokasi cache bootstrap ke /tmp yang writable
+    $_ENV['APP_SERVICES_CACHE'] = '/tmp/storage/bootstrap/cache/services.php';
+    $_ENV['APP_PACKAGES_CACHE'] = '/tmp/storage/bootstrap/cache/packages.php';
+    $_ENV['APP_ROUTES_CACHE']   = '/tmp/storage/bootstrap/cache/routes-v7.php';
+    $_ENV['APP_EVENTS_CACHE']   = '/tmp/storage/bootstrap/cache/events.php';
+
     // Pastikan folder yang dibutuhkan Laravel tersedia di /tmp Vercel
     $dirs = [
         $_ENV['APP_STORAGE'] . '/app',
@@ -51,6 +57,7 @@ if (!is_writable(dirname(__DIR__) . '/storage')) {
         $_ENV['APP_STORAGE'] . '/framework/testing',
         $_ENV['APP_STORAGE'] . '/framework/views',
         $_ENV['APP_STORAGE'] . '/logs',
+        $_ENV['APP_STORAGE'] . '/bootstrap/cache',
     ];
     foreach ($dirs as $dir) {
         if (!is_dir($dir)) {
