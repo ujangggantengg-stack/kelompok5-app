@@ -32,7 +32,8 @@ $app = Application::configure(basePath: dirname(__DIR__))
         //
     })->create();
 
-if (isset($_SERVER['VERCEL_URL']) || isset($_ENV['VERCEL_URL'])) {
+// Jika aplikasi berjalan di sistem file yang Read-Only (seperti Vercel)
+if (!is_writable(dirname(__DIR__) . '/storage')) {
     $_ENV['APP_STORAGE'] = '/tmp/storage';
     $app->useStoragePath($_ENV['APP_STORAGE']);
 
