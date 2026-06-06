@@ -722,7 +722,7 @@ class RotiController extends Controller
      */
     private function verifyRecaptcha($token)
     {
-        $secretKey = env('RECAPTCHA_SECRET_KEY');
+        $secretKey = env('RECAPTCHA_SECRET_KEY', '6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe');
         
         // For development/testing with test keys, skip actual verification
         if ($secretKey === '6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe') {
