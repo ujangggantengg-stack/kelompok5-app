@@ -1104,7 +1104,7 @@
                     linear-gradient(135deg, rgba(255, 255, 255, 0.4) 0%, transparent 50%),
                     linear-gradient(225deg, rgba(232, 130, 26, 0.08) 0%, transparent 60%),
                     linear-gradient(135deg, rgba(245, 230, 200, 0.95) 0%, rgba(240, 221, 184, 0.95) 50%, rgba(232, 213, 176, 0.95) 100%),
-                    url('{{ str_starts_with($promo->background_image, "http") ? $promo->background_image : asset($promo->background_image ?? "https://images.unsplash.com/photo-1589569444360-61ed59c6e2be?q=80&w=1170&auto=format&fit=crop") }}') !important;
+                    url('{{ $promo && str_starts_with($promo->background_image, "http") ? $promo->background_image : asset(optional($promo)->background_image ?? "https://images.unsplash.com/photo-1589569444360-61ed59c6e2be?q=80&w=1170&auto=format&fit=crop") }}') !important;
                 background-size: cover !important;
                 border: 1.5px solid rgba(212, 175, 55, 0.3) !important;
                 box-shadow: 0 20px 60px rgba(139, 69, 19, 0.1) !important;
