@@ -272,7 +272,13 @@ class RotiController extends Controller
                 // Handle payment proof upload
                 $proofPath = null;
                 if ($request->hasFile('payment_proof')) {
-                    $proofPath = $request->file('payment_proof')->store('payment_proofs', 'public');
+                    try {
+                        \Illuminate\Support\Facades\DB::statement('ALTER TABLE orders ALTER COLUMN payment_proof TYPE text');
+                    } catch (\Exception $e) {}
+                    
+                    $file = $request->file('payment_proof');
+                    $imageContent = file_get_contents($file->getRealPath());
+                    $proofPath = 'data:' . $file->getMimeType() . ';base64,' . base64_encode($imageContent);
                 }
 
                 $order = Order::create([
@@ -577,12 +583,20 @@ class RotiController extends Controller
         $order = Order::findOrFail($request->order_id);
 
         if ($request->hasFile('payment_proof')) {
-            $path = $request->file('payment_proof')->store('payment_proofs', 'public');
+            try {
+                // Hack untuk Vercel: Ubah tipe kolom payment_proof jadi text agar muat nyimpan base64 (sekali jalan)
+                \Illuminate\Support\Facades\DB::statement('ALTER TABLE orders ALTER COLUMN payment_proof TYPE text');
+            } catch (\Exception $e) {
+                // Abaikan jika sudah text atau jika pakai SQLite
+            }
+
+            $file = $request->file('payment_proof');
+            $imageContent = file_get_contents($file->getRealPath());
+            $base64Image = 'data:' . $file->getMimeType() . ';base64,' . base64_encode($imageContent);
             
             $order->update([
-                'payment_proof' => $path,
+                'payment_proof' => $base64Image,
                 'payment_status' => 'pending_confirmation', // Update status to waiting for admin
-                // Status order stays pending until admin confirms
             ]);
 
             // Notify Admin
@@ -599,8 +613,6 @@ class RotiController extends Controller
                     'message_type' => 'image', // Or specific type
                     'message' => $message,
                     'is_read' => false,
-                    // If we want to store the image in chat too, we might need a separate field or logic
-                    // For now, admin checks order details
                 ]);
                 
                 $order->messageThread->update(['last_message_at' => now()]);
@@ -609,7 +621,7 @@ class RotiController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'Bukti pembayaran berhasil diupload',
-                'payment_proof_url' => '/storage/' . $path
+                'payment_proof_url' => $base64Image
             ]);
         }
 

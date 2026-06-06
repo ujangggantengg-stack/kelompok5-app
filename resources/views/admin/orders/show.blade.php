@@ -460,10 +460,13 @@
             
             <div style="background: #1a1a1a; border-radius: 12px; padding: 1rem; margin-bottom: 1rem;">
                 <div style="text-align: center; margin-bottom: 1rem;">
-                    <img src="/storage/{{ $order->payment_proof }}" 
+                    @php
+                        $proofUrl = str_starts_with($order->payment_proof, 'data:image') ? $order->payment_proof : '/storage/' . $order->payment_proof;
+                    @endphp
+                    <img src="{{ $proofUrl }}" 
                          alt="Bukti Pembayaran" 
-                         class="payment-proof-thumbnail"
-                         style="max-width: 100%; max-height: 500px; border-radius: 8px; cursor: pointer; border: 2px solid #FFD700;"
+                         class="payment-proof-thumbnail max-w-full h-auto rounded-lg shadow-sm border border-gray-200"
+                         style="max-width: 100%; max-height: 500px; border-radius: 8px; cursor: pointer; border: 2px solid #FFD700; object-fit: contain;"
                          onclick="openImageModal(this.src)">
                 </div>
                 
@@ -471,17 +474,16 @@
                     📅 Diupload: {{ $order->updated_at->format('d M Y H:i') }}
                 </div>
                 
-                <div style="display: flex; gap: 0.75rem; margin-top: 1rem;">
-                    <a href="/storage/{{ $order->payment_proof }}" 
-                       target="_blank" 
-                       class="btn-secondary" 
-                       style="flex: 1; display: inline-block;">
-                        🔍 Lihat Ukuran Penuh
+                <div class="mt-4 flex justify-center gap-3">
+                    <a href="{{ $proofUrl }}" 
+                       target="_blank"
+                       class="inline-flex items-center px-4 py-2 bg-gray-100 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brown-500">
+                        🔍 Lihat Penuh
                     </a>
-                    <a href="/storage/{{ $order->payment_proof }}" 
-                       download 
-                       class="btn-secondary" 
-                       style="flex: 1; display: inline-block;">
+                    
+                    <a href="{{ $proofUrl }}" 
+                       download="Bukti_Pembayaran_#{{ $order->order_number }}"
+                       class="inline-flex items-center px-4 py-2 bg-white border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brown-500">
                         📥 Download Gambar
                     </a>
                 </div>

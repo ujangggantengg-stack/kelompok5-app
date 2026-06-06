@@ -96,7 +96,12 @@ class ProductController extends Controller
         ]);
 
         if ($request->hasFile('image')) {
-            $validated['image'] = $request->file('image')->store('products', 'public');
+            try {
+                \Illuminate\Support\Facades\DB::statement('ALTER TABLE products ALTER COLUMN image TYPE text');
+            } catch (\Exception $e) {}
+            $file = $request->file('image');
+            $imageContent = file_get_contents($file->getRealPath());
+            $validated['image'] = 'data:' . $file->getMimeType() . ';base64,' . base64_encode($imageContent);
         }
 
         Product::create($validated);
@@ -146,11 +151,16 @@ class ProductController extends Controller
         ]);
 
         if ($request->hasFile('image')) {
+            try {
+                \Illuminate\Support\Facades\DB::statement('ALTER TABLE products ALTER COLUMN image TYPE text');
+            } catch (\Exception $e) {}
             // Delete old image
-            if ($product->image) {
-                \Storage::disk('public')->delete($product->image);
+            if ($product->image && !str_starts_with($product->image, 'data:image')) {
+                \Illuminate\Support\Facades\Storage::disk('public')->delete($product->image);
             }
-            $validated['image'] = $request->file('image')->store('products', 'public');
+            $file = $request->file('image');
+            $imageContent = file_get_contents($file->getRealPath());
+            $validated['image'] = 'data:' . $file->getMimeType() . ';base64,' . base64_encode($imageContent);
         }
 
         $product->update($validated);
