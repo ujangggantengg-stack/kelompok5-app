@@ -13,16 +13,9 @@ class GoogleController extends Controller
     public function redirect()
     {
         try {
-            // Cek apakah konfigurasi sudah diisi di .env
-            $clientId = env('GOOGLE_CLIENT_ID');
-            $clientSecret = env('GOOGLE_CLIENT_SECRET');
-
-            if ($clientId === 'masukkan_client_id_disini' || empty($clientId) || $clientSecret === 'masukkan_client_secret_disini' || empty($clientSecret)) {
-                return redirect()->route('customer.login')->with('error', 'Login Google belum dikonfigurasi dengan benar di file .env.');
-            }
-
             return Socialite::driver('google')
                 ->stateless()
+                ->redirectUrl(url('/auth/google/callback'))
                 ->with(['guzzle' => ['verify' => false]])
                 ->redirect();
         } catch (\Exception $e) {
@@ -36,6 +29,7 @@ class GoogleController extends Controller
         try {
             $user = Socialite::driver('google')
                 ->stateless()
+                ->redirectUrl(url('/auth/google/callback'))
                 ->with(['guzzle' => ['verify' => false]])
                 ->user();
 
