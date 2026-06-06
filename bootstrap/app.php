@@ -35,6 +35,8 @@ $app = Application::configure(basePath: dirname(__DIR__))
 // Jika aplikasi berjalan di sistem file yang Read-Only (seperti Vercel)
 if (!is_writable(dirname(__DIR__) . '/storage')) {
     $_ENV['APP_STORAGE'] = '/tmp/storage';
+    $_ENV['SESSION_DRIVER'] = 'cookie';
+    putenv('SESSION_DRIVER=cookie');
     $app->useStoragePath($_ENV['APP_STORAGE']);
 
     // Pindahkan lokasi cache bootstrap ke /tmp yang writable
