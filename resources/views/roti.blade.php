@@ -4618,7 +4618,7 @@
             <h2 style="font-family: 'Playfair Display', serif; color: var(--primary); margin-bottom: 1.5rem; font-size: 1.5rem;">🔐 Verifikasi Keamanan</h2>
             <div style="background: #fff8e1; border: 2px solid #ffca28; border-radius: 8px; padding: 1.5rem; margin-bottom: 1.5rem; text-align: center;">
                 <p style="margin: 0 0 1rem 0; font-size: 0.9rem; color: #856404; font-weight: 600;">Silakan verifikasi bahwa Anda bukan robot</p>
-                <div class="g-recaptcha" data-sitekey="{{ env('RECAPTCHA_SITE_KEY') }}" data-callback="onRecaptchaSuccess" style="display: flex; justify-content: center; margin-bottom: 1rem;"></div>
+                <div class="g-recaptcha" data-sitekey="{{ env('RECAPTCHA_SITE_KEY', '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI') }}" data-callback="onRecaptchaSuccess" style="display: flex; justify-content: center; margin-bottom: 1rem;"></div>
                 <p style="margin: 0; font-size: 0.75rem; color: #999;">Dilindungi oleh reCAPTCHA</p>
             </div>
             <div style="display: flex; gap: 1rem;">
