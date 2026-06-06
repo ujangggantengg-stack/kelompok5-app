@@ -29,13 +29,7 @@ $app = Application::configure(basePath: dirname(__DIR__))
         //
     })
     ->withExceptions(function (Exceptions $exceptions): void {
-        $exceptions->renderable(function (\Throwable $e) {
-            echo "<h1>Original Error:</h1>";
-            echo "<p>" . $e->getMessage() . "</p>";
-            echo "<p>File: " . $e->getFile() . " on line " . $e->getLine() . "</p>";
-            echo "<pre>" . $e->getTraceAsString() . "</pre>";
-            die();
-        });
+        // Biarkan Laravel yang menangani exception (termasuk validasi JSON) secara otomatis.
     })->create();
 
 // Jika aplikasi berjalan di sistem file yang Read-Only (seperti Vercel)

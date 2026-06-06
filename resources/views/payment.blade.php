@@ -892,7 +892,16 @@
                 },
                 body: formData
             })
-            .then(response => response.json())
+            .then(response => {
+                return response.text().then(text => {
+                    try {
+                        return JSON.parse(text);
+                    } catch (e) {
+                        console.error('Raw response:', text);
+                        throw new Error('Server returned invalid JSON: ' + text.substring(0, 100));
+                    }
+                });
+            })
             .then(data => {
                 if (data.success) {
                     document.getElementById('successMessage').classList.add('show');
@@ -915,7 +924,11 @@
             })
             .catch(error => {
                 console.error('Error:', error);
-                alert('Terjadi kesalahan saat upload');
+                if (error.message && error.message.includes('Server returned invalid JSON')) {
+                    alert('Error Server: ' + error.message.substring(0, 200) + '... (Cek Console)');
+                } else {
+                    alert('Terjadi kesalahan saat upload: ' + error.message);
+                }
                 submitBtn.disabled = false;
                 submitBtn.textContent = 'Kirim Bukti Pembayaran';
             });
