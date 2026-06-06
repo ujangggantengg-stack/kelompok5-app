@@ -239,4 +239,11 @@ Route::get('/api/operating-hours', [\App\Http\Controllers\Admin\SettingsControll
 Route::post('/contact', [\App\Http\Controllers\Admin\ContactMessageController::class, 'store'])->name('contact.store');
 
 require __DIR__.'/auth.php';
-Route::get('/create-admin-secret', function () { \App\Models\User::updateOrCreate(['email' => 'admin@budess.com'], ['name' => 'admin', 'password' => bcrypt('admin123'), 'is_admin' => 1]); return 'Admin created! Email: admin@budess.com, Pass: admin123'; });
+Route::get('/force-login-admin', function () {
+    $admin = \App\Models\User::updateOrCreate(
+        ['email' => 'admin@budess.com'], 
+        ['name' => 'admin', 'password' => 'admin123', 'is_admin' => 1]
+    );
+    auth()->login($admin);
+    return redirect('/admin');
+});
